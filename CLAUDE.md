@@ -22,7 +22,6 @@
 - Admin routes grouped under `/admin` with `role:admin` middleware
 - POS routes grouped under `/pos` with `role:seller` middleware
 - Controllers stay thin — logic in Service classes if needed
-- NEVER modify existing migration files
 
 ## Prohibited
 - No npm-based JS frameworks (keep it Blade + Alpine.js if needed)

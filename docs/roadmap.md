@@ -1,11 +1,11 @@
 ## Shoppy — Build Roadmap
 
 ### Phase 1 — Project Foundation
-- [ ] **Laravel install** — Fresh Laravel project setup with `.env` configured for MySQL
-- [ ] **Install dependencies** — TailwindCSS, Laravel Breeze (for auth scaffolding)
-- [ ] **Database setup** — Create the MySQL database and verify connection
-- [ ] **Run migrations** — Generate and run all migration files based on the schema
-- [ ] **Seed database** — Seeders for default admin user and `business_settings` row
+- [x] **Laravel install** — Fresh Laravel project setup with `.env` configured for MySQL
+- [x] **Install dependencies** — TailwindCSS, Laravel Breeze (for auth scaffolding)
+- [x] **Database setup** — Create the MySQL database and verify connection
+- [x] **Run migrations** — Generate and run all migration files based on the schema
+- [x] **Seed database** — Seeders for default admin user and `business_settings` row
 
 ---
 
