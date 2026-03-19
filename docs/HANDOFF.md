@@ -2,7 +2,7 @@
 
 ## Current State
 
-Phase 1 is complete. The project has a working Laravel install, a fully migrated database, and seeded data. The app is not yet runnable in the browser — no routes, views, or auth exist yet.
+Phases 1 and 2 are complete. The app is fully runnable in the browser — login, role-based redirects, route protection, and logout all work.
 
 **What's working:**
 - Fresh Laravel 11 install with `.env` configured for MySQL (via XAMPP)
@@ -10,22 +10,31 @@ Phase 1 is complete. The project has a working Laravel install, a fully migrated
 - MySQL database `shoppy` is live and connected
 - All 9 migrations ran successfully — every table is created and correct
 - Database fully seeded: admin user, 2 sellers, business settings, 6 categories, 35 products
+- Login page at `/login` with Spanish validation messages
+- Role middleware (`role:admin`, `role:seller`) registered and applied to route groups
+- `/admin/*` protected — admin only; `/pos/*` protected — seller only
+- Post-login redirect by role; authenticated users forced to `/login` go to their home
+- `/` redirects to `/login`
+- Logout clears session and returns to `/login`
+- Frontend assets built via Vite (`npm run build`)
 
 **What's not done yet:**
-- Everything from Phase 2 onward (auth, routes, UI)
+- Phase 3 onward (admin UI, POS, reports, etc.)
 
 ---
 
 ## Where We Are
 
-**Current phase:** Phase 2 — Auth & Roles (not started)
+**Current phase:** Phase 3 — Shoppy Adminer Core (not started)
 
-**Immediate next task:** Build auth:
-1. Login page UI
-2. `role:admin` and `role:seller` middleware
-3. Route protection for `/admin` and `/pos` groups
-4. Post-login redirect — admin → `/admin/dashboard`, seller → `/pos`
-5. Logout wired up
+**Immediate next task:**
+1. Admin shared layout with sidebar nav
+2. Dashboard with stat cards (sales today, low stock, etc.)
+3. Business settings form
+4. Categories CRUD
+5. Products CRUD
+6. Manual stock adjustment
+7. Users CRUD
 
 ---
 

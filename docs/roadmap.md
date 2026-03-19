@@ -10,11 +10,11 @@
 ---
 
 ### Phase 2 — Auth & Roles
-- [ ] **Login page** — Build the shared login form UI
-- [ ] **Role middleware** — Create `role:admin` and `role:seller` middleware
-- [ ] **Route protection** — Apply middleware to `/admin` and `/pos` route groups
-- [ ] **Post-login redirect** — Admin goes to `/admin/dashboard`, seller goes to `/pos`
-- [ ] **Logout** — Wire up logout and redirect to `/login`
+- [x] **Login page** — Build the shared login form UI
+- [x] **Role middleware** — Create `role:admin` and `role:seller` middleware
+- [x] **Route protection** — Apply middleware to `/admin` and `/pos` route groups
+- [x] **Post-login redirect** — Admin goes to `/admin/dashboard`, seller goes to `/pos`
+- [x] **Logout** — Wire up logout and redirect to `/login`
 
 ---
 
