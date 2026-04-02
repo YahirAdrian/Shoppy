@@ -2,7 +2,7 @@
 
 ## Current State
 
-Phases 1 and 2 are complete. The app is fully runnable in the browser — login, role-based redirects, route protection, and logout all work.
+Phases 1, 2, and 3 are complete. The admin layout with sidebar navigation and a fully designed dashboard (with fictional data) are working in the browser.
 
 **What's working:**
 - Fresh Laravel 11 install with `.env` configured for MySQL (via XAMPP)
@@ -17,24 +17,45 @@ Phases 1 and 2 are complete. The app is fully runnable in the browser — login,
 - `/` redirects to `/login`
 - Logout clears session and returns to `/login`
 - Frontend assets built via Vite (`npm run build`)
+- **Admin layout** — Shared Blade layout (`components/layouts/admin.blade.php`) with sidebar component (`components/admin/sidebar.blade.php`)
+- **Sidebar** — stone-800 background, 7 nav links (Dashboard, Ventas, Inventario, Reportes, Negocio, Usuarios, Tareas) with white SVG icons, active state detection, disabled state for unbuilt routes, user footer with logout
+- **Mobile responsive** — Hamburger menu toggle via Alpine.js with overlay
+- **Dashboard** — Split into partials (`admin/dashboard/summary-cards.blade.php`, `stats.blade.php`, `tasks.blade.php`) with fictional data: 3 summary cards, line + doughnut charts, pending/upcoming task lists
 
 **What's not done yet:**
-- Phase 3 onward (admin UI, POS, reports, etc.)
+- Phase 4 onward (wire dashboard to real data, task CRUD, inventory, POS, reports, etc.)
 
 ---
 
 ## Where We Are
 
-**Current phase:** Phase 3 — Shoppy Adminer Core (not started)
+**Current phase:** Phase 4 — Dashboard (not started)
 
-**Immediate next task:**
-1. Admin shared layout with sidebar nav
-2. Dashboard with stat cards (sales today, low stock, etc.)
-3. Business settings form
-4. Categories CRUD
-5. Products CRUD
-6. Manual stock adjustment
-7. Users CRUD
+**Immediate next tasks:**
+1. Wire dashboard summary cards to real DB queries
+2. Wire charts to real sales/category data
+3. Task CRUD (create, edit, delete tasks with repetition support)
+4. Task lists with status management (pending, upcoming, scheduled)
+
+---
+
+## Session Log — 2026-04-01 (Phase 3)
+
+**Roadmap restructured** — Rewrote roadmap from 8 phases to 12, mapping each admin nav section from the adminer features spec to its own phase.
+
+**Color palette updated** — Replaced teal primary with purple, refined orange/amber accent in `resources/css/app.css` to match `resources/assets/color-palette.png`. Removed `dark-*` scale.
+
+**Typography** — Changed font from Instrument Sans to Libre Franklin (Google Fonts), loaded in both layout files.
+
+**Dependencies installed via npm** (replaced CDNs):
+- `alpinejs` — imported in `app.js`
+- `chart.js` — imported in `app.js`, exposed as `window.Chart`
+
+**Icon files** — 9 white SVG icons created in `public/icons/` (dashboard, ventas, inventario, reportes, negocio, usuarios, tareas, logout, menu).
+
+**Specs updated:**
+- `docs/specs/ui_design.md` — New color scheme, sidebar specs, nav items (replaced "Financiero" with "Tareas"), typography section
+- `docs/roadmap.md` — Phase 3 marked complete
 
 ---
 
@@ -63,6 +84,13 @@ Phases 1 and 2 are complete. The app is fully runnable in the browser — login,
 - `stock_movements.user_id` → `nullOnDelete` (audit trail must survive user deletion)
 - All other FKs → `restrictOnDelete` (prevent silent data loss)
 
+**UI/Frontend decisions**
+- Admin sidebar extracted as a separate Blade component (`components/admin/sidebar.blade.php`)
+- Dashboard split into 3 partials: `summary-cards`, `stats`, `tasks`
+- Alpine.js and Chart.js installed via npm, not CDN
+- SVG icons stored as individual files in `public/icons/` with `stroke="white"` hardcoded (since `<img>` tags can't inherit `currentColor`)
+- Font: Libre Franklin via Google Fonts CDN, defined as `--font-sans` in Tailwind `@theme`
+
 ---
 
 ## Watch Out For
@@ -73,3 +101,5 @@ Phases 1 and 2 are complete. The app is fully runnable in the browser — login,
 - **`role` and `is_active` live on the `users` table** — Breeze's default scaffolding does not know about these; any generated auth views or redirects will need to be customised to handle role-based routing
 - **No `status` column on `sales` yet** — void/refund (Phase 5) will require adding a `status` enum (`completed`, `voided`, `refunded`); worth adding as an early migration before Phase 5 work begins
 - **`mbstring` and `pdo_mysql` extensions** must be enabled in `/etc/php/8.3/cli/php.ini` — both were missing on this machine and had to be installed via `apt`
+- **Dashboard data is fictional** — All summary cards, charts, and task lists use hardcoded data; must be wired to real queries in Phase 4
+- **No Eloquent models yet** besides `User.php` — Product, Category, Sale, SaleItem, BusinessSettings models need to be created when building CRUD features

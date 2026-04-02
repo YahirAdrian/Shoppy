@@ -6,45 +6,32 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Libre Franklin', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 
-    /* Primary: Teal */
-    --color-primary-50: #f0fdfa;
-    --color-primary-100: #ccfbf1;
-    --color-primary-200: #99f6e4;
-    --color-primary-300: #5eead4;
-    --color-primary-400: #2dd4bf;
-    --color-primary-500: #14b8a6;
-    --color-primary-600: #0d9488;
-    --color-primary-700: #0f766e;
-    --color-primary-800: #115e59;
-    --color-primary-900: #134e4a;
-    --color-primary-950: #042f2e;
+    /* Primary: Purple */
+    --color-primary-50: #f5f0ff;
+    --color-primary-100: #ebe0ff;
+    --color-primary-200: #d4bfff;
+    --color-primary-300: #b899ff;
+    --color-primary-400: #9b70ff;
+    --color-primary-500: #7c4ddb;
+    --color-primary-600: #6535b8;
+    --color-primary-700: #502a96;
+    --color-primary-800: #3d2076;
+    --color-primary-900: #2b1558;
+    --color-primary-950: #1a0a3e;
 
-    /* Dark: Dark Blue (backgrounds, headings) */
-    --color-dark-50: #f0f4ff;
-    --color-dark-100: #e0e9ff;
-    --color-dark-200: #c7d6fe;
-    --color-dark-300: #a4b8fc;
-    --color-dark-400: #7a91f8;
-    --color-dark-500: #4f63f3;
-    --color-dark-600: #3242e8;
-    --color-dark-700: #2631d5;
-    --color-dark-800: #2129ac;
-    --color-dark-900: #1e2578;
-    --color-dark-950: #141650;
-
-    /* Accent: Orange */
-    --color-accent-50: #fff7ed;
-    --color-accent-100: #ffedd5;
-    --color-accent-200: #fed7aa;
-    --color-accent-300: #fdba74;
-    --color-accent-400: #fb923c;
-    --color-accent-500: #f97316;
-    --color-accent-600: #ea580c;
-    --color-accent-700: #c2410c;
-    --color-accent-800: #9a3412;
-    --color-accent-900: #7c2d12;
-    --color-accent-950: #431407;
+    /* Accent: Orange / Amber */
+    --color-accent-50: #fef6e8;
+    --color-accent-100: #fdecc8;
+    --color-accent-200: #fbd896;
+    --color-accent-300: #f8c15c;
+    --color-accent-400: #f5a623;
+    --color-accent-500: #e88a10;
+    --color-accent-600: #c8690c;
+    --color-accent-700: #a84e0e;
+    --color-accent-800: #8b3a12;
+    --color-accent-900: #6b2810;
+    --color-accent-950: #3d1408;
 }
