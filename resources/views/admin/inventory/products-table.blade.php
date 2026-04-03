@@ -54,7 +54,8 @@
                                     selling_price: '{{ $product->selling_price }}',
                                     low_stock_alert: '{{ $product->low_stock_alert }}',
                                     unit: '{{ $product->unit }}',
-                                    is_active: {{ $product->is_active ? 'true' : 'false' }}
+                                    is_active: {{ $product->is_active ? 'true' : 'false' }},
+                                    image: '{{ $product->image }}'
                                 })" class="flex w-full items-center gap-2 px-3 py-2 text-sm text-stone-700 hover:bg-stone-50">
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z"/></svg>
                                     Editar

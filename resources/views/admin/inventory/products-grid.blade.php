@@ -15,9 +15,7 @@
                             @if($product->image)
                                 <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-full w-full rounded-t-xl object-cover">
                             @else
-                                <svg class="h-12 w-12 text-stone-300" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-                                    <path d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0 0 22.5 18.75V5.25A2.25 2.25 0 0 0 20.25 3H3.75A2.25 2.25 0 0 0 1.5 5.25v13.5A2.25 2.25 0 0 0 3.75 21Z"/>
-                                </svg>
+                                <img src="{{{ asset('icons/product-default.svg') }}}" alt="{{ $product->name }}" class="h-12 w-12 text-stone-400">
                             @endif
                         </div>
 
@@ -44,7 +42,8 @@
                                     selling_price: '{{ $product->selling_price }}',
                                     low_stock_alert: '{{ $product->low_stock_alert }}',
                                     unit: '{{ $product->unit }}',
-                                    is_active: {{ $product->is_active ? 'true' : 'false' }}
+                                    is_active: {{ $product->is_active ? 'true' : 'false' }},
+                                    image: '{{ $product->image }}'
                                 })" class="flex w-full items-center gap-2 px-3 py-2 text-sm text-stone-700 hover:bg-stone-50">
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z"/></svg>
                                     Editar
