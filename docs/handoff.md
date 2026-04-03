@@ -2,9 +2,9 @@
 
 ## Current State
 
-Phases 1, 2, and 3 are complete. The admin layout with sidebar navigation and a fully designed dashboard (with fictional data) are working in the browser.
+Phases 1–3 are complete. Phase 4 (Inventory) is built but **not yet tested in the browser**.
 
-**What's working:**
+**What's working (Phases 1–3):**
 - Fresh Laravel 11 install with `.env` configured for MySQL (via XAMPP)
 - TailwindCSS and Laravel Breeze installed
 - MySQL database `shoppy` is live and connected
@@ -22,20 +22,63 @@ Phases 1, 2, and 3 are complete. The admin layout with sidebar navigation and a 
 - **Mobile responsive** — Hamburger menu toggle via Alpine.js with overlay
 - **Dashboard** — Split into partials (`admin/dashboard/summary-cards.blade.php`, `stats.blade.php`, `tasks.blade.php`) with fictional data: 3 summary cards, line + doughnut charts, pending/upcoming task lists
 
+**What's built but needs browser QA (Phase 4 — Inventory):**
+- Full inventory page at `/admin/inventario` with tab-based UI (Products / Categories)
+- Products: grid layout (cards grouped by category) + table layout with localStorage toggle
+- Product CRUD via Alpine.js modals with image upload, Spanish validation messages
+- Category CRUD via Alpine.js modals with product count badges
+- Stock adjustment modal with live preview of new stock, creates StockMovement records
+- Low stock badges, flash messages, empty states
+- Currency symbol pulled from `business_settings`, never hardcoded
+- Storage symlink created (`php artisan storage:link`)
+
 **What's not done yet:**
-- Phase 4 onward (wire dashboard to real data, task CRUD, inventory, POS, reports, etc.)
+- Phase 4 browser QA (visual review, end-to-end CRUD testing)
+- Phase 5 onward (Sales, Reports, Users, Business Settings, Tasks, POS, etc.)
+- Dashboard still uses fictional data — not wired to real queries
 
 ---
 
 ## Where We Are
 
-**Current phase:** Phase 4 — Dashboard (not started)
+**Current phase:** Phase 4 — Inventory (built, needs QA)
 
 **Immediate next tasks:**
-1. Wire dashboard summary cards to real DB queries
-2. Wire charts to real sales/category data
-3. Task CRUD (create, edit, delete tasks with repetition support)
-4. Task lists with status management (pending, upcoming, scheduled)
+1. Browser QA of inventory page — test all CRUD flows, layout toggle, modals, flash messages
+2. Fix any visual or functional issues found during QA
+3. Phase 5 — Sales table page and sale detail modal
+
+---
+
+## Session Log — 2026-04-02 (Phase 4 — Inventory)
+
+**Models created (4):**
+- `app/Models/Category.php` — `products()` hasMany, `is_active` cast
+- `app/Models/Product.php` — `category()` belongsTo, `stockMovements()` hasMany, `isLowStock()` helper, decimal casts
+- `app/Models/StockMovement.php` — `product()` and `user()` belongsTo
+- `app/Models/BusinessSetting.php` — fillable for all settings columns
+
+**Controllers created (2):**
+- `app/Http/Controllers/Admin/ProductController.php` — `index()`, `store()`, `update()`, `destroy()`, `adjustStock()`
+- `app/Http/Controllers/Admin/CategoryController.php` — `store()`, `update()`, `destroy()`
+
+**Routes added** — 9 routes under `/admin/inventario` in `routes/web.php`
+
+**Views created (7):**
+- `resources/views/admin/inventory/index.blade.php` — Main page with Alpine.js tabs, layout toggle, flash messages, delete confirmation modal
+- `resources/views/admin/inventory/products-grid.blade.php` — Cards grouped by category with kebab menus, low stock badges, image placeholders
+- `resources/views/admin/inventory/products-table.blade.php` — Full table with all product columns and kebab menus
+- `resources/views/admin/inventory/categories.blade.php` — Grid cards with product count and CRUD actions
+- `resources/views/admin/inventory/product-form-modal.blade.php` — Create/edit product modal with image upload
+- `resources/views/admin/inventory/category-form-modal.blade.php` — Create/edit category modal
+- `resources/views/admin/inventory/stock-adjustment-modal.blade.php` — Stock adjustment with live new-stock preview
+
+**Docs:**
+- `docs/specs/inventory.md` — Full implementation plan saved
+
+**Infrastructure:**
+- `php artisan storage:link` executed for product image uploads
+- `app/Http/Controllers/Admin/` directory created for admin-namespaced controllers
 
 ---
 
@@ -102,4 +145,6 @@ Phases 1, 2, and 3 are complete. The admin layout with sidebar navigation and a 
 - **No `status` column on `sales` yet** — void/refund (Phase 5) will require adding a `status` enum (`completed`, `voided`, `refunded`); worth adding as an early migration before Phase 5 work begins
 - **`mbstring` and `pdo_mysql` extensions** must be enabled in `/etc/php/8.3/cli/php.ini` — both were missing on this machine and had to be installed via `apt`
 - **Dashboard data is fictional** — All summary cards, charts, and task lists use hardcoded data; must be wired to real queries in Phase 4
-- **No Eloquent models yet** besides `User.php` — Product, Category, Sale, SaleItem, BusinessSettings models need to be created when building CRUD features
+- **Eloquent models created so far**: `User`, `Category`, `Product`, `StockMovement`, `BusinessSetting` — Sale and SaleItem models still need to be created when building Phase 5
+- **Inventory page not yet QA'd in browser** — all code is written but needs visual review and end-to-end CRUD testing
+- **Product image upload** requires `storage:link` (already run) and the `public` disk configured — images stored in `storage/app/public/products/`
