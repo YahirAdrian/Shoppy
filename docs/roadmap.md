@@ -26,20 +26,20 @@
 ---
 
 ### Phase 4 — Inventory (Products & Categories)
-- [ ] **Inventory page with tabs** — Tab-based UI to switch between Products and Categories
-- [ ] **Products grid layout (default)** — Products grouped by category sections, displayed as cards with image header, product info as key-value, kebab menu for edit/delete. 20 products per page, categories not split across pages
-- [ ] **Products table layout** — Table view with all product info, preview button, kebab menu for edit/delete
-- [ ] **Layout toggle** — Switch between grid and table views (persisted preference)
-- [ ] **Product CRUD** — Create, edit, delete products with category assignment and image upload
-- [ ] **Manual stock adjustment** — Form to add/remove stock with a reason note
-- [ ] **Categories grid** — Grid card layout showing category name, product count, and CRUD actions
-- [ ] **Category CRUD** — Create, edit, delete categories
+- [x] **Inventory page with tabs** — Tab-based UI to switch between Products and Categories
+- [x] **Products grid layout (default)** — Products grouped by category sections, displayed as cards with image header, product info as key-value, kebab menu for edit/delete. 20 products per page, categories not split across pages
+- [x] **Products table layout** — Table view with all product info, preview button, kebab menu for edit/delete
+- [x] **Layout toggle** — Switch between grid and table views (persisted preference)
+- [x] **Product CRUD** — Create, edit, delete products with category assignment and image upload
+- [x] **Manual stock adjustment** — Form to add/remove stock with a reason note
+- [x] **Categories grid** — Grid card layout showing category name, product count, and CRUD actions
+- [x] **Category CRUD** — Create, edit, delete categories
 
 ---
 
 ### Phase 5 — Sales
-- [ ] **Sales table page** — Paginated table (30 per page) in chronological order (recent first) with all sale info
-- [ ] **Sale detail modal** — Button to view full sale breakdown in a modal
+- [x] **Sales table page** — Paginated table (30 per page) in chronological order (recent first) with all sale info
+- [x] **Sale detail modal** — Button to view full sale breakdown in a modal
 
 ---
 

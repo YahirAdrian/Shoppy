@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\SaleController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,6 +29,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/inventario/categorias', [CategoryController::class, 'store'])->name('categories.store');
     Route::put('/inventario/categorias/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/inventario/categorias/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+    // Sales
+    Route::get('/ventas', [SaleController::class, 'index'])->name('sales.index');
+    Route::get('/ventas/{sale}', [SaleController::class, 'show'])->name('sales.show');
 });
 
 Route::middleware(['auth', 'role:seller'])->prefix('pos')->name('pos.')->group(function () {
