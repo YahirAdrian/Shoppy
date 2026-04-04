@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SaleController;
 use App\Http\Controllers\Admin\BusinessSettingController;
+use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +50,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/usuarios', [UserController::class, 'store'])->name('users.store');
     Route::put('/usuarios/{user}', [UserController::class, 'update'])->name('users.update');
     Route::patch('/usuarios/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
+
+    // Tasks
+    Route::get('/tareas', [TaskController::class, 'index'])->name('tasks.index');
+    Route::post('/tareas', [TaskController::class, 'store'])->name('tasks.store');
+    Route::put('/tareas/{task}', [TaskController::class, 'update'])->name('tasks.update');
+    Route::patch('/tareas/{task}/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
+    Route::delete('/tareas/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 });
 
 Route::middleware(['auth', 'role:seller'])->prefix('pos')->name('pos.')->group(function () {

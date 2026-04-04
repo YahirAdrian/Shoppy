@@ -51,7 +51,7 @@
 ---
 
 ### Phase 7 — Users
-- [ ] **Users CRUD** — List, create, edit, deactivate admin and seller accounts
+- [x] **Users CRUD** — List, create, edit, deactivate admin and seller accounts
 
 ---
 
@@ -61,7 +61,7 @@
 ---
 
 ### Phase 9 — Tasks (standalone page)
-- [ ] **Tasks page** — Full ToDo list management for admin tasks (mirrors dashboard task section with expanded UI)
+- [x] **Tasks page** — Full ToDo list management for admin tasks (mirrors dashboard task section with expanded UI)
 
 ---
 
