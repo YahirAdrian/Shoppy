@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SaleController;
 use App\Http\Controllers\Admin\BusinessSettingController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,6 +43,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Business Settings
     Route::get('/negocio', [BusinessSettingController::class, 'edit'])->name('business.edit');
     Route::put('/negocio', [BusinessSettingController::class, 'update'])->name('business.update');
+
+    // Users
+    Route::get('/usuarios', [UserController::class, 'index'])->name('users.index');
+    Route::post('/usuarios', [UserController::class, 'store'])->name('users.store');
+    Route::put('/usuarios/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::patch('/usuarios/{user}/toggle-active', [UserController::class, 'toggleActive'])->name('users.toggle-active');
 });
 
 Route::middleware(['auth', 'role:seller'])->prefix('pos')->name('pos.')->group(function () {

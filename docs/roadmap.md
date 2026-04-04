@@ -56,7 +56,7 @@
 ---
 
 ### Phase 8 — Business Settings
-- [ ] **Business settings page** — Form to update business name, logo, currency, tax rate, receipt note
+- [x] **Business settings page** — Form to update business name, logo, currency, low stock threshold, receipt header/footer
 
 ---
 

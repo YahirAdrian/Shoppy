@@ -30,6 +30,13 @@ class LoginController extends Controller
             ])->onlyInput('email');
         }
 
+        if (! Auth::user()->is_active) {
+            Auth::logout();
+            return back()->withErrors([
+                'email' => 'Tu cuenta ha sido desactivada. Contacta al administrador.',
+            ])->onlyInput('email');
+        }
+
         $request->session()->regenerate();
 
         return match (Auth::user()->role) {

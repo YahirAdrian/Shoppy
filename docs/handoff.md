@@ -2,7 +2,7 @@
 
 ## Current State
 
-Phases 1–3 are complete. Phase 4 (Inventory) is built but **not yet tested in the browser**.
+Phases 1–8 are complete (except Phase 7 — Users). Phase 4 (Inventory) was the last feature **browser QA'd**.
 
 **What's working (Phases 1–3):**
 - Fresh Laravel 11 install with `.env` configured for MySQL (via XAMPP)
@@ -32,21 +32,52 @@ Phases 1–3 are complete. Phase 4 (Inventory) is built but **not yet tested in 
 - Currency symbol pulled from `business_settings`, never hardcoded
 - Storage symlink created (`php artisan storage:link`)
 
+**Phase 5 — Sales (built):**
+- Sales table at `/admin/ventas` — paginated (30/page), chronological order
+- Sale detail modal with full breakdown
+
+**Phase 6 — Reports (built):**
+- Report generator at `/admin/reportes` with filter controls (period, product, category)
+- Table-format preview and print-friendly layout
+
+**Phase 8 — Business Settings (built):**
+- Settings form at `/admin/negocio` with three sections: business info (name, logo, address, phone, email), currency & inventory (currency symbol, low stock threshold), receipt text (header/footer)
+- Logo upload with preview/remove, Spanish validation, flash messages
+
 **What's not done yet:**
-- Phase 4 browser QA (visual review, end-to-end CRUD testing)
-- Phase 5 onward (Sales, Reports, Users, Business Settings, Tasks, POS, etc.)
+- Phase 7 — Users CRUD
+- Phase 9 — Tasks (standalone page)
+- Phase 10 — Shoppy Sales (POS Mode)
+- Phase 11 — Polish & QA
 - Dashboard still uses fictional data — not wired to real queries
 
 ---
 
 ## Where We Are
 
-**Current phase:** Phase 4 — Inventory (built, needs QA)
+**Current phase:** Phase 7 — Users (next up)
 
 **Immediate next tasks:**
-1. Browser QA of inventory page — test all CRUD flows, layout toggle, modals, flash messages
-2. Fix any visual or functional issues found during QA
-3. Phase 5 — Sales table page and sale detail modal
+1. Phase 7 — Users CRUD (list, create, edit, deactivate admin and seller accounts)
+2. Phase 9 — Tasks standalone page
+3. Phase 10 — Shoppy Sales (POS Mode)
+
+---
+
+## Session Log — 2026-04-03 (Phase 8 — Business Settings)
+
+**Controller created (1):**
+- `app/Http/Controllers/Admin/BusinessSettingController.php` — `edit()`, `update()` with logo upload/removal, Spanish validation messages
+
+**Routes added** — 2 routes under `/admin/negocio` in `routes/web.php` (`GET` edit, `PUT` update)
+
+**Views created (1):**
+- `resources/views/admin/business/edit.blade.php` — Settings form with 3 card sections (business info, currency & inventory, receipt text), logo preview with Alpine.js, flash messages
+
+**Docs:**
+- `docs/specs/business_settings.md` — Full spec with data structure, page layout, implementation steps
+- `docs/specs/adminer_features.md` — Business section fleshed out with field descriptions
+- `docs/roadmap.md` — Phase 8 marked complete
 
 ---
 
@@ -147,4 +178,4 @@ Phases 1–3 are complete. Phase 4 (Inventory) is built but **not yet tested in 
 - **Dashboard data is fictional** — All summary cards, charts, and task lists use hardcoded data; must be wired to real queries in Phase 4
 - **Eloquent models created so far**: `User`, `Category`, `Product`, `StockMovement`, `BusinessSetting` — Sale and SaleItem models still need to be created when building Phase 5
 - **Inventory page not yet QA'd in browser** — all code is written but needs visual review and end-to-end CRUD testing
-- **Product image upload** requires `storage:link` (already run) and the `public` disk configured — images stored in `storage/app/public/products/`
+- **File uploads** require `storage:link` (already run) and the `public` disk configured — product images in `storage/app/public/products/`, business logos in `storage/app/public/logos/`
