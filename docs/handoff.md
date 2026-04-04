@@ -2,7 +2,7 @@
 
 ## Current State
 
-Phases 1–8 are complete (except Phase 7 — Users). Phase 4 (Inventory) was the last feature **browser QA'd**.
+Phases 1–9 are complete. Phase 4 (Inventory) was the last feature **browser QA'd**.
 
 **What's working (Phases 1–3):**
 - Fresh Laravel 11 install with `.env` configured for MySQL (via XAMPP)
@@ -44,9 +44,19 @@ Phases 1–8 are complete (except Phase 7 — Users). Phase 4 (Inventory) was th
 - Settings form at `/admin/negocio` with three sections: business info (name, logo, address, phone, email), currency & inventory (currency symbol, low stock threshold), receipt text (header/footer)
 - Logo upload with preview/remove, Spanish validation, flash messages
 
+**Phase 7 — Users (built):**
+- Users table at `/admin/usuarios` with role/status badges, kebab menu (edit, activate/deactivate)
+- Create/edit user modal with role select and password management
+- Admin self-protection: can't deactivate self or change own role
+- Inactive users blocked at login with error message
+
+**Phase 9 — Tasks (built):**
+- Tasks page at `/admin/tareas` with pending/completed sections
+- Task CRUD with due dates and recurring tasks (daily, weekly, monthly with custom intervals)
+- Completing a recurring task auto-creates the next occurrence
+- Overdue tasks highlighted in red
+
 **What's not done yet:**
-- Phase 7 — Users CRUD
-- Phase 9 — Tasks (standalone page)
 - Phase 10 — Shoppy Sales (POS Mode)
 - Phase 11 — Polish & QA
 - Dashboard still uses fictional data — not wired to real queries
@@ -55,12 +65,36 @@ Phases 1–8 are complete (except Phase 7 — Users). Phase 4 (Inventory) was th
 
 ## Where We Are
 
-**Current phase:** Phase 7 — Users (next up)
+**Current phase:** Phase 10 — Shoppy Sales (POS Mode)
 
 **Immediate next tasks:**
-1. Phase 7 — Users CRUD (list, create, edit, deactivate admin and seller accounts)
-2. Phase 9 — Tasks standalone page
-3. Phase 10 — Shoppy Sales (POS Mode)
+1. Phase 10 — Shoppy Sales (POS Mode)
+2. Phase 11 — Polish & QA
+
+---
+
+## Session Log — 2026-04-04 (Phase 7 — Users & Phase 9 — Tasks)
+
+**Phase 7 — Users CRUD:**
+- `app/Models/User.php` — added `role`, `is_active` to `$fillable`
+- `app/Http/Controllers/Admin/UserController.php` — `index()`, `store()`, `update()`, `toggleActive()` with self-protection rules
+- `resources/views/admin/users/index.blade.php` — Table with role/status badges, kebab menus with fixed positioning
+- `resources/views/admin/users/user-form-modal.blade.php` — Create/edit modal
+- `app/Http/Controllers/Auth/LoginController.php` — Added `is_active` check after authentication
+- Routes: 4 routes under `/admin/usuarios`
+- Spec: `docs/specs/users.md`
+
+**Phase 9 — Tasks:**
+- `database/migrations/2026_04_04_213646_create_tasks_table.php` — tasks table with repeat fields
+- `app/Models/Task.php` — `isRecurring()`, `isOverdue()`, `calculateNextDueDate()` helpers, `repeat_interval` cast to integer
+- `app/Http/Controllers/Admin/TaskController.php` — full CRUD + toggle with recurring task auto-creation
+- `resources/views/admin/tasks/index.blade.php` — Pending/completed sections with task cards
+- `resources/views/admin/tasks/task-form-modal.blade.php` — Create/edit modal with repeat controls
+- Routes: 5 routes under `/admin/tareas`
+- Spec: `docs/specs/tasks_page.md`
+
+**Bug fixes:**
+- Added global `[x-cloak] { display: none !important; }` to `resources/css/app.css` to prevent modal flash on page load (affected Inventory and all pages with modals)
 
 ---
 
@@ -176,6 +210,6 @@ Phases 1–8 are complete (except Phase 7 — Users). Phase 4 (Inventory) was th
 - **No `status` column on `sales` yet** — void/refund (Phase 5) will require adding a `status` enum (`completed`, `voided`, `refunded`); worth adding as an early migration before Phase 5 work begins
 - **`mbstring` and `pdo_mysql` extensions** must be enabled in `/etc/php/8.3/cli/php.ini` — both were missing on this machine and had to be installed via `apt`
 - **Dashboard data is fictional** — All summary cards, charts, and task lists use hardcoded data; must be wired to real queries in Phase 4
-- **Eloquent models created so far**: `User`, `Category`, `Product`, `StockMovement`, `BusinessSetting` — Sale and SaleItem models still need to be created when building Phase 5
+- **Eloquent models created so far**: `User`, `Category`, `Product`, `StockMovement`, `BusinessSetting`, `Sale`, `SaleItem`, `Task`
 - **Inventory page not yet QA'd in browser** — all code is written but needs visual review and end-to-end CRUD testing
 - **File uploads** require `storage:link` (already run) and the `public` disk configured — product images in `storage/app/public/products/`, business logos in `storage/app/public/logos/`
