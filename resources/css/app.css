@@ -5,6 +5,24 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+@media print {
+    nav, aside, header, [x-cloak] {
+        display: none !important;
+    }
+    .lg\:pl-64 {
+        padding-left: 0 !important;
+    }
+    main {
+        margin: 0 !important;
+        padding: 1rem !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    body {
+        background: white !important;
+    }
+}
+
 @theme {
     --font-sans: 'Libre Franklin', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SaleController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
@@ -33,6 +34,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Sales
     Route::get('/ventas', [SaleController::class, 'index'])->name('sales.index');
     Route::get('/ventas/{sale}', [SaleController::class, 'show'])->name('sales.show');
+
+    // Reports
+    Route::get('/reportes', [ReportController::class, 'index'])->name('reports.index');
 });
 
 Route::middleware(['auth', 'role:seller'])->prefix('pos')->name('pos.')->group(function () {

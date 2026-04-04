@@ -44,9 +44,9 @@
 ---
 
 ### Phase 6 — Reports
-- [ ] **Report generator** — Page with filter controls: period (daily, weekly, monthly, yearly, custom dates), product selection, category filter
-- [ ] **Report preview** — Table-format previsualization of the generated report
-- [ ] **Report print** — Print-friendly layout for the previsualized report
+- [x] **Report generator** — Page with filter controls: period (daily, weekly, monthly, yearly, custom dates), product selection, category filter
+- [x] **Report preview** — Table-format previsualization of the generated report
+- [x] **Report print** — Print-friendly layout for the previsualized report
 
 ---
 
