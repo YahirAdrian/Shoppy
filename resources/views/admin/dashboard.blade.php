@@ -1,11 +1,13 @@
-<!DOCTYPE html>
-<html lang="es">
-<head><meta charset="UTF-8"><title>Panel de administración — Shoppy</title></head>
-<body>
-    <h1>Panel de administración</h1>
-    <form method="POST" action="{{ route('logout') }}">
-        @csrf
-        <button type="submit">Cerrar sesión</button>
-    </form>
-</body>
-</html>
+<x-layouts.admin title="Dashboard — Shoppy Adminer">
+
+    {{-- Page header --}}
+    <h1 class="text-2xl font-bold text-stone-800 uppercase">Dashboard</h1>
+    <p class="mt-1 text-stone-500">Resumen del negocio y estadísticas</p>
+
+    @include('admin.dashboard.summary-cards')
+
+    @include('admin.dashboard.stats')
+
+    @include('admin.dashboard.tasks')
+
+</x-layouts.admin>

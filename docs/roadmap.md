@@ -18,19 +18,55 @@
 
 ---
 
-### Phase 3 — Shoppy Adminer Core
-- [ ] **Admin layout** — Shared blade layout with sidebar nav for all admin pages
-- [ ] **Dashboard page** — Placeholder page with key stat cards (sales today, low stock, etc.)
-- [ ] **Business settings page** — Form to update business name, logo, currency, tax, receipt note
-- [ ] **Categories CRUD** — List, create, edit, delete categories
-- [ ] **Products CRUD** — List, create, edit, delete products with category assignment
-- [ ] **Manual stock adjustment** — Form to add/remove stock with a reason note
-- [ ] **Users CRUD** — Admin can create, edit, deactivate seller accounts
+### Phase 3 — Admin Layout & Navigation
+- [x] **Admin layout** — Shared Blade layout with sidebar nav (Dashboard, Ventas, Inventario, Reportes, Usuarios, Negocio, Tareas)
+- [x] **Sidebar navigation** — Collapsible sidebar with icons, active state highlighting, and mobile responsive menu
+- [x] **Dashboard content** — Summary cards (ventas, productos, pendientes), statistics charts (line + doughnut), and actions/tasks sections
 
 ---
 
-### Phase 4 — Shoppy Sales (POS Mode)
-- [ ] **POS layout** — Clean, touch-friendly blade layout for the seller terminal
+### Phase 4 — Inventory (Products & Categories)
+- [x] **Inventory page with tabs** — Tab-based UI to switch between Products and Categories
+- [x] **Products grid layout (default)** — Products grouped by category sections, displayed as cards with image header, product info as key-value, kebab menu for edit/delete. 20 products per page, categories not split across pages
+- [x] **Products table layout** — Table view with all product info, preview button, kebab menu for edit/delete
+- [x] **Layout toggle** — Switch between grid and table views (persisted preference)
+- [x] **Product CRUD** — Create, edit, delete products with category assignment and image upload
+- [x] **Manual stock adjustment** — Form to add/remove stock with a reason note
+- [x] **Categories grid** — Grid card layout showing category name, product count, and CRUD actions
+- [x] **Category CRUD** — Create, edit, delete categories
+
+---
+
+### Phase 5 — Sales
+- [x] **Sales table page** — Paginated table (30 per page) in chronological order (recent first) with all sale info
+- [x] **Sale detail modal** — Button to view full sale breakdown in a modal
+
+---
+
+### Phase 6 — Reports
+- [x] **Report generator** — Page with filter controls: period (daily, weekly, monthly, yearly, custom dates), product selection, category filter
+- [x] **Report preview** — Table-format previsualization of the generated report
+- [x] **Report print** — Print-friendly layout for the previsualized report
+
+---
+
+### Phase 7 — Users
+- [x] **Users CRUD** — List, create, edit, deactivate admin and seller accounts
+
+---
+
+### Phase 8 — Business Settings
+- [x] **Business settings page** — Form to update business name, logo, currency, low stock threshold, receipt header/footer
+
+---
+
+### Phase 9 — Tasks (standalone page)
+- [x] **Tasks page** — Full ToDo list management for admin tasks (mirrors dashboard task section with expanded UI)
+
+---
+
+### Phase 10 — Shoppy Sales (POS Mode)
+- [ ] **POS layout** — Clean, touch-friendly Blade layout for the seller terminal
 - [ ] **POS terminal page** — Product grid + cart panel side by side
 - [ ] **Add to cart** — Select products, adjust quantities in the cart
 - [ ] **Checkout & charge** — Enter amount tendered, calculate change, confirm sale
@@ -39,31 +75,7 @@
 
 ---
 
-### Phase 5 — Sales History & Receipts
-- [ ] **Admin sales list** — Paginated table of all transactions with filters
-- [ ] **Sale detail page** — Full breakdown of a single sale
-- [ ] **Void / refund actions** — Mark a sale as voided or refunded, reverse stock
-- [ ] **Seller history page** — POS-side view of the seller's own past sales
-- [ ] **Printable receipt** — Clean print-only blade view for receipts
-
----
-
-### Phase 6 — Reports
-- [ ] **Reports hub** — Landing page with links to each report type
-- [ ] **Sales report** — Total sales filtered by date range
-- [ ] **Inventory report** — Current stock levels across all products
-- [ ] **Low stock report** — Products at or below their alert threshold
-- [ ] **Expenses report** — Expenses summary filtered by date range
-- [ ] **CSV export** — Export sales report as a downloadable CSV
-
----
-
-### Phase 7 — Expenses
-- [ ] **Expenses CRUD** — List, create, edit, delete expense entries
-
----
-
-### Phase 8 — Polish & QA
+### Phase 11 — Polish & QA
 - [ ] **Form validation** — Server-side validation with user-friendly error messages on all forms
 - [ ] **Flash messages** — Success/error feedback after every action
 - [ ] **Low stock alerts** — Visual warning on dashboard and product list for low stock items

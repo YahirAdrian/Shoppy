@@ -5,6 +5,11 @@
 - **Shoppy Sales**: POS terminal for sellers (touch-friendly, fast checkout)
 - Target: small local businesses (simple, not over-engineered)
 
+### Features specification
+- **Shoppy Adminer** feature specifications (Dashboard, sales, inventory, reports, business settings, users, finance) are described at @docs/specs/adminer_features.md
+
+- **Shoppy Sales** feature specifications (Create sales, search products, charge sales) are described at @docs/specs/sales_features.md
+
 ## Tech Stack
 - PHP 8.x / Laravel 11
 - MySQL
@@ -24,12 +29,7 @@
 - Controllers stay thin — logic in Service classes if needed
 
 ## Style Guidelines
-- **Color scheme**: Teal (primary) + Orange (accent) — defined in `resources/css/app.css` under `@theme`
-- Use `primary-*` classes for main UI elements (buttons, links, focus rings, active states)
-- Use `accent-*` classes for highlights, badges, CTAs, and secondary actions
-- Use `dark-*` classes for backgrounds and headings (dark blue)
-- Never hardcode hex colors in Blade — always use the Tailwind `primary-*` / `accent-*` scale
-- Preferred base shades: `primary-600` for buttons, `accent-500` for accent elements
+@docs/specs/ui_design.md
 
 ## Prohibited
 - No npm-based JS frameworks (keep it Blade + Alpine.js if needed)
