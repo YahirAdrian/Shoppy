@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ReportController;
 use App\Http\Controllers\Admin\SaleController;
+use App\Http\Controllers\Admin\BusinessSettingController;
 use App\Http\Controllers\Auth\LoginController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Reports
     Route::get('/reportes', [ReportController::class, 'index'])->name('reports.index');
+
+    // Business Settings
+    Route::get('/negocio', [BusinessSettingController::class, 'edit'])->name('business.edit');
+    Route::put('/negocio', [BusinessSettingController::class, 'update'])->name('business.update');
 });
 
 Route::middleware(['auth', 'role:seller'])->prefix('pos')->name('pos.')->group(function () {

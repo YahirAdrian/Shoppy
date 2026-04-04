@@ -71,7 +71,22 @@ The user aministration panel to add additonal admin users and sellers.
 
 ## Business
 
-Business configuration settings to customize the application
+Pagina de configuracion del negocio. Permite editar los ajustes globales que afectan toda la aplicacion. La tabla `business_settings` contiene una unica fila (singleton). Solo se permiten acciones de editar y guardar (no crear ni eliminar).
+
+Full spec: @docs/specs/business_settings.md
+
+### Informacion del negocio
+- **Nombre del negocio** (obligatorio): Nombre que se muestra en tickets y encabezados.
+- **Logo**: Carga de imagen con vista previa y opcion de eliminar.
+- **Direccion, Telefono, Correo electronico**: Datos de contacto opcionales.
+
+### Configuracion de moneda e inventario
+- **Simbolo de moneda** (obligatorio): Simbolo usado en toda la aplicacion para precios (e.g. "$", "Q").
+- **Umbral de stock bajo** (obligatorio): Valor global por defecto para alertas de stock bajo. Los productos sin valor propio usan este umbral.
+
+### Ticket de venta
+- **Encabezado del ticket**: Texto que aparece en la parte superior del ticket de venta.
+- **Pie del ticket**: Texto que aparece en la parte inferior del ticket de venta.
 
 ## Tasks
 
