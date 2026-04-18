@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\BusinessSettingController;
 use App\Http\Controllers\Admin\TaskController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Pos\PosApiController;
+use App\Http\Controllers\Pos\PosController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -60,5 +62,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 Route::middleware(['auth', 'role:seller'])->prefix('pos')->name('pos.')->group(function () {
-    Route::get('/', fn () => view('pos.index'))->name('index');
+    Route::get('/', fn () => redirect()->route('pos.sale'))->name('index');
+    Route::get('/venta', [PosController::class, 'sale'])->name('sale');
+    Route::get('/buscar', [PosController::class, 'search'])->name('search');
+    Route::get('/estado', [PosController::class, 'status'])->name('status');
+
+    // API endpoints (implemented in later phases)
+    Route::get('/api/products', [PosApiController::class, 'searchProducts'])->name('api.products');
+    Route::post('/api/sales', [PosApiController::class, 'storeSale'])->name('api.sales.store');
 });

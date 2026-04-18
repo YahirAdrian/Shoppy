@@ -1,12 +1,12 @@
 # Shoppy Sales — Build Roadmap
 
 ### Phase 1 — POS Layout & Navigation Shell
-- [ ] **POS layout** — Blade layout component (`components/layouts/pos.blade.php`) with narrow icon-only sidebar (`w-20`), title "Shoppy Sales - Punto de Venta"
-- [ ] **POS sidebar** — Icon-only sidebar (`components/pos/sidebar.blade.php`) with user avatar, 3 nav links (Venta, Buscar, Estado), logout button. Stone-800 bg, primary-800 active state
-- [ ] **SVG icons** — 3 white SVG icons in `public/icons/`: `pos-venta.svg`, `pos-buscar.svg`, `pos-estado.svg`
-- [ ] **Controllers** — `Pos/PosController.php` (3 view methods: sale, search, status) and `Pos/PosApiController.php` (stub for JSON endpoints)
-- [ ] **Routes** — Expand POS route group: page routes (`/pos/venta`, `/pos/buscar`, `/pos/estado`), API routes (`/pos/api/products`, `/pos/api/sales`, `/pos/api/admin-auth`)
-- [ ] **Placeholder views** — `pos/sale.blade.php`, `pos/search.blade.php`, `pos/status.blade.php` using POS layout
+- [x] **POS layout** — Blade layout component (`components/layouts/pos.blade.php`) with narrow icon-only sidebar (`w-20`), title "Shoppy Sales - Punto de Venta"
+- [x] **POS sidebar** — Icon-only sidebar (`components/pos/sidebar.blade.php`) with user avatar, 3 nav links (Venta, Buscar, Estado), logout button. Stone-800 bg, primary-800 active state
+- [x] **SVG icons** — 3 white SVG icons in `public/icons/`: `pos-venta.svg`, `pos-buscar.svg`, `pos-estado.svg`
+- [x] **Controllers** — `Pos/PosController.php` (3 view methods: sale, search, status) and `Pos/PosApiController.php` (stub for JSON endpoints)
+- [x] **Routes** — Expand POS route group: page routes (`/pos/venta`, `/pos/buscar`, `/pos/estado`), API routes (`/pos/api/products`, `/pos/api/sales`, `/pos/api/admin-auth`)
+- [x] **Placeholder views** — `pos/sale.blade.php`, `pos/search.blade.php`, `pos/status.blade.php` using POS layout
 
 ---
 
