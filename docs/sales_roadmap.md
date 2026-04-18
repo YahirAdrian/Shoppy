@@ -11,13 +11,13 @@
 ---
 
 ### Phase 2 — Sale Page (Product Search + Cart)
-- [ ] **Search bar** — Product barcode/name input with 0.8s debounce, fetches `GET /pos/api/products?q=...`. Auto-adds if 1 result, shows horizontal scrollable cards if multiple, error if none
-- [ ] **Product search endpoint** — `PosApiController::searchProducts()`: search by name LIKE or exact barcode, active products only, returns JSON (id, name, barcode, selling_price, stock, category, image), limit 20
-- [ ] **Cart table** — Producto, Cantidad (editable), Categoría, Código, Descuento, Subtotal, Total, Eliminar button. Total row at bottom. All state in Alpine.js
-- [ ] **localStorage persistence** — Save cart on every change, restore on page init
-- [ ] **Payment modal** — Payment method (cash only enabled), amount tendered input, live change calculation, optional fields (customer name, note) hidden by default, "Registrar venta" button
-- [ ] **Stock warning modal** — Danger-style modal when product has insufficient stock, option to proceed anyway
-- [ ] **Action buttons** — "Reiniciar venta" (clear cart + localStorage), "Confirmar venta" (open payment modal)
+- [x] **Search bar** — Product barcode/name input with 0.8s debounce, fetches `GET /pos/api/products?q=...`. Auto-adds if 1 result, shows horizontal scrollable cards if multiple, error if none
+- [x] **Product search endpoint** — `PosApiController::searchProducts()`: search by name LIKE or exact barcode, active products only, returns JSON (id, name, barcode, selling_price, stock, category, image), limit 20
+- [x] **Cart table** — Producto, Cantidad (editable), Categoría, Código, Descuento, Subtotal, Total, Eliminar button. Total row at bottom. All state in Alpine.js
+- [x] **localStorage persistence** — Save cart on every change, restore on page init
+- [x] **Payment modal** — Payment method (cash only enabled), amount tendered input, live change calculation, optional fields (customer name, note) hidden by default, "Registrar venta" button
+- [x] **Stock warning modal** — Danger-style modal when product has insufficient stock, option to proceed anyway
+- [x] **Action buttons** — "Reiniciar venta" (clear cart + localStorage), "Confirmar venta" (open payment modal)
 
 ---
 

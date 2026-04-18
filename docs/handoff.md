@@ -65,11 +65,20 @@ Phases 1–9 are complete. Phase 4 (Inventory) was the last feature **browser QA
 
 ## Where We Are
 
-**Current phase:** Phase 10 — Shoppy Sales (POS Mode)
+**Current phase:** Shoppy Sales — Phase 3 (Sale Creation Backend)
+
+**Shoppy Sales — Phase 2 complete (Sale Page UI):**
+- `app/Http/Controllers/Pos/PosApiController.php` — `searchProducts()` returns active products filtered by barcode (exact) or name (LIKE), limit 20, JSON shape `{products: [{id, name, barcode, selling_price, stock, unit, category, category_id, image}]}`
+- `resources/views/pos/sale.blade.php` — full Alpine.js page: search bar (0.8s debounce, auto-add single result, scrollable cards for multiple), cart table with editable quantity/discount, live totals, localStorage persistence under key `pos_cart`, reset + confirm buttons
+- `resources/views/pos/partials/payment-modal.blade.php` — method selector (cash only active), tendered input, live change calc, collapsible optional fields (customer, note)
+- `resources/views/pos/partials/stock-warning-modal.blade.php` — red-styled modal showing insufficient-stock items, "continue anyway" flow
+- `submitSale()` intentionally stubbed (alert) — Phase 3 wires it to `POST /pos/api/sales`
 
 **Immediate next tasks:**
-1. Phase 10 — Shoppy Sales (POS Mode)
-2. Phase 11 — Polish & QA
+1. Phase 3 — Sale creation backend (`storeSale()` with DB::transaction, stock decrement, StockMovement rows)
+2. Phase 4 — Receipt printing
+3. Phases 5–7 — Search page, status page, tests
+4. Adminer Phase 10 — Polish & QA
 
 ---
 

@@ -39,3 +39,10 @@ Sidebar nav links (in order):
 
 - The app design should be consistent with `resources/assets/Dashboard.png`, which is the admin dashboard page.
 - All user interface text must be in Spanish.
+
+## JavaScript
+
+- **No inline JavaScript in Blade components.** Any non-trivial JS (Alpine.js component factories, utility functions, handlers beyond simple one-liner expressions) must live in a dedicated file under `resources/js/` and be imported via `resources/js/app.js`.
+- Alpine factories should be exposed on `window` (e.g. `window.posSale = posSale`) and referenced from Blade via `x-data="posSale(...)"`.
+- Pass server-rendered values (route URLs, config) to JS as function arguments, never hardcode in the JS file.
+- Trivial inline expressions in attributes (`@click="showModal = true"`, `x-show="open"`) are allowed.
