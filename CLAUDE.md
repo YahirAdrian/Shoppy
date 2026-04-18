@@ -38,4 +38,13 @@
 - All user interface text must be in Spanish
 
 ## Roadmap
-@docs/roadmap.md
+- **Shoppy Adminer**: @docs/adminer_roadmap.md
+- **Shoppy Sales**: @docs/sales_roadmap.md
+
+## Tests
+Create a test for every feature created or task in the roadmap
+- **Shoppy Adminer**: @tests/Feature/Shoppy_Adminer/
+- **Shoppy Sales**: @tests/Feature/Shoppy_Sales/
+
+## Handoff
+Summarize the status of the project after completing a task or finishing a session at @docs/handoff.md

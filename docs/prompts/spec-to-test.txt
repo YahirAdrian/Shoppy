@@ -1,0 +1,11 @@
+Convert this feature spec into Laravel Feature Tests.
+
+Requirements:
+- Cover happy path
+- Cover all edge cases
+- Use PHPUnit
+- Use factories
+- Follow Laravel conventions
+
+Spec:
+{{SPEC}}

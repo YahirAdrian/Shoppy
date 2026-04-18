@@ -1,4 +1,4 @@
-## Shoppy — Build Roadmap
+## Shoppy Adminer — Build Roadmap
 
 ### Phase 1 — Project Foundation
 - [x] **Laravel install** — Fresh Laravel project setup with `.env` configured for MySQL
@@ -65,17 +65,7 @@
 
 ---
 
-### Phase 10 — Shoppy Sales (POS Mode)
-- [ ] **POS layout** — Clean, touch-friendly Blade layout for the seller terminal
-- [ ] **POS terminal page** — Product grid + cart panel side by side
-- [ ] **Add to cart** — Select products, adjust quantities in the cart
-- [ ] **Checkout & charge** — Enter amount tendered, calculate change, confirm sale
-- [ ] **Save sale to DB** — Persist sale, sale items, and stock movement records on checkout
-- [ ] **Receipt screen** — Post-sale summary screen with print option
-
----
-
-### Phase 11 — Polish & QA
+### Phase 10 — Polish & QA
 - [ ] **Form validation** — Server-side validation with user-friendly error messages on all forms
 - [ ] **Flash messages** — Success/error feedback after every action
 - [ ] **Low stock alerts** — Visual warning on dashboard and product list for low stock items

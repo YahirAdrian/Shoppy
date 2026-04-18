@@ -1,0 +1,10 @@
+Implement Laravel code to satisfy these tests.
+
+Constraints:
+- Do not add extra behavior
+- Follow clean architecture
+- Use Service layer if needed
+- Use DB transactions
+
+Tests:
+{{TESTS}}
