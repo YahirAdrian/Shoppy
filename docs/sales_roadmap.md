@@ -40,11 +40,11 @@
 ---
 
 ### Phase 6 — POS Status Page
-- [ ] **Session stats** — Grid of 4 cards: seller name, total sales count, total sold, average ticket (server-rendered from today's sales)
-- [ ] **Sales history table** — Sale #, time, subtotal, discount, payment method, total, note, preview button, delete button (admin-only)
-- [ ] **Sale preview modal** — Fetch sale detail via AJAX, show items table
-- [ ] **Admin auth** — Padlock button opens modal for admin email + password. 15-min timeout, cleared on tab close / page navigation / `visibilitychange`
-- [ ] **Admin operations** — Money withdrawal input, end session button (disabled until all money withdrawn). Delete sale in table (requires admin auth)
+- [x] **Session stats** — Grid of 4 cards: seller name, total sales count, total sold, average ticket (server-rendered from today's sales)
+- [x] **Sales history table** — Sale #, time, subtotal, discount, payment method, total, note, preview button, delete button (admin-only)
+- [x] **Sale preview modal** — Fetch sale detail via AJAX, show items table
+- [x] **Admin auth** — Padlock button opens modal for admin email + password. 15-min timeout, cleared on tab close / page navigation / `visibilitychange`
+- [x] **Admin operations** — Money withdrawal input, end session button (disabled until all money withdrawn). Delete sale in table (requires admin auth)
 
 ---
 

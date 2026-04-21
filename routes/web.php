@@ -67,7 +67,10 @@ Route::middleware(['auth', 'role:seller'])->prefix('pos')->name('pos.')->group(f
     Route::get('/buscar', [PosController::class, 'search'])->name('search');
     Route::get('/estado', [PosController::class, 'status'])->name('status');
 
-    // API endpoints (implemented in later phases)
+    // API endpoints
     Route::get('/api/products', [PosApiController::class, 'searchProducts'])->name('api.products');
     Route::post('/api/sales', [PosApiController::class, 'storeSale'])->name('api.sales.store');
+    Route::get('/api/sales/{sale}', [PosApiController::class, 'showSale'])->name('api.sales.show');
+    Route::delete('/api/sales/{sale}', [PosApiController::class, 'deleteSale'])->name('api.sales.destroy');
+    Route::post('/api/admin-auth', [PosApiController::class, 'adminAuth'])->name('api.admin-auth');
 });

@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\Pos;
 
 use App\Http\Controllers\Controller;
+use App\Models\BusinessSetting;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\StockMovement;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class PosApiController extends Controller
 {
@@ -181,7 +185,7 @@ class PosApiController extends Controller
 
         return response()->json([
             'sale' => [
-                'id' => $sale->id,
+                'id'         => $sale->id,
                 'created_at' => $sale->created_at->toIso8601String(),
                 'customer_name' => $sale->customer_name,
                 'note' => $sale->note,
@@ -201,5 +205,104 @@ class PosApiController extends Controller
                 ]),
             ],
         ], 201);
+    }
+
+    public function showSale(Sale $sale): JsonResponse
+    {
+        if ($sale->user_id !== auth()->id()) {
+            return response()->json(['message' => 'No autorizado.'], 403);
+        }
+
+        $sale->load('items');
+
+        return response()->json([
+            'sale' => [
+                'id' => $sale->id,
+                'created_at' => $sale->created_at->toIso8601String(),
+                'customer_name' => $sale->customer_name,
+                'note' => $sale->note,
+                'payment_method' => $sale->payment_method,
+                'subtotal' => (float) $sale->subtotal,
+                'discount_amount' => (float) $sale->discount_amount,
+                'total' => (float) $sale->total,
+                'amount_tendered' => (float) $sale->amount_tendered,
+                'change_given' => (float) $sale->change_given,
+                'items' => $sale->items->map(fn (SaleItem $i) => [
+                    'product_name' => $i->product_name,
+                    'quantity' => (float) $i->quantity,
+                    'unit_price' => (float) $i->unit_price,
+                    'discount_amount' => (float) $i->discount_amount,
+                    'subtotal' => (float) $i->subtotal,
+                ]),
+            ],
+        ]);
+    }
+
+    public function deleteSale(Sale $sale, Request $request): JsonResponse
+    {
+        $adminToken = $request->header('X-Admin-Token');
+        $sessionToken = session('pos_admin_token');
+        $expiresAt = session('pos_admin_expires_at');
+
+        if (! $adminToken || $adminToken !== $sessionToken || ! $expiresAt || now()->isAfter($expiresAt)) {
+            return response()->json(['message' => 'Se requiere autorización de administrador.'], 403);
+        }
+
+        if ($sale->user_id !== auth()->id()) {
+            return response()->json(['message' => 'No autorizado.'], 403);
+        }
+
+        DB::transaction(function () use ($sale) {
+            $sale->load('items');
+
+            foreach ($sale->items as $item) {
+                Product::where('id', $item->product_id)->increment('stock', $item->quantity);
+
+                StockMovement::create([
+                    'user_id' => auth()->id(),
+                    'product_id' => $item->product_id,
+                    'action' => 'return',
+                    'quantity' => (int) round($item->quantity),
+                    'note' => 'Venta anulada #' . $sale->id,
+                ]);
+            }
+
+            $sale->delete();
+        });
+
+        return response()->json(['message' => 'Venta eliminada.']);
+    }
+
+    public function adminAuth(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ], [
+            'email.required' => 'El correo es obligatorio.',
+            'password.required' => 'La contraseña es obligatoria.',
+        ]);
+
+        $admin = User::where('email', $validated['email'])
+            ->where('role', 'admin')
+            ->where('is_active', true)
+            ->first();
+
+        if (! $admin || ! Hash::check($validated['password'], $admin->password)) {
+            return response()->json(['message' => 'Credenciales incorrectas.'], 401);
+        }
+
+        $token = Str::uuid()->toString();
+        $expiresAt = now()->addMinutes(15);
+
+        session([
+            'pos_admin_token' => $token,
+            'pos_admin_expires_at' => $expiresAt,
+        ]);
+
+        return response()->json([
+            'token' => $token,
+            'expires_at' => $expiresAt->toIso8601String(),
+        ]);
     }
 }

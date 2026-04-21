@@ -65,7 +65,16 @@ Phases 1–9 are complete. Phase 4 (Inventory) was the last feature **browser QA
 
 ## Where We Are
 
-**Current phase:** Shoppy Sales — Phase 6 (POS Status Page)
+**Current phase:** Shoppy Sales — Phase 7 (Tests)
+
+**Shoppy Sales — Phase 6 complete (POS Status Page):**
+- `routes/web.php` — 3 new POS API routes: `GET /api/sales/{sale}` (showSale), `DELETE /api/sales/{sale}` (deleteSale), `POST /api/admin-auth` (adminAuth)
+- `PosController::status()` — Queries today's sales for the current seller, computes totalSold/avgTicket, passes stats + `salesData` JSON to view
+- `PosApiController::showSale()` — Returns sale with items (restricted to current seller)
+- `PosApiController::deleteSale()` — Validates `X-Admin-Token` header against session token+expiry, restores product stock (StockMovement action='return'), deletes sale
+- `PosApiController::adminAuth()` — Validates admin email+password, stores UUID token + 15-min expiry in session, returns token to client
+- `resources/js/pos/status.js` — `posStatus` Alpine factory: sales array (server-initialized, updated on delete), preview modal (AJAX), delete confirm modal (sends X-Admin-Token), admin auth modal (in-memory token, 15-min setTimeout, cleared on visibilitychange/beforeunload), money withdrawal tracker (client-side), end session (submits #logout-form)
+- `resources/views/pos/status.blade.php` — Stats grid (4 cards), sales history table, preview modal, delete confirm modal, admin auth modal, admin operations section (withdrawal + end session)
 
 **Shoppy Sales — Phase 5 complete (Product Search Page):**
 - `PosApiController::searchProducts()` — When `?page=` is present returns paginated (30/page) JSON with `meta` (current_page, last_page, total); without `?page=` keeps limit(20) for sale page quick search. Also returns `low_stock_threshold` per product (product's own `low_stock_alert` or global business setting fallback).
