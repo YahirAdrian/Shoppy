@@ -48,7 +48,18 @@
 
 ---
 
-### Phase 7 — Tests
+### Phase 7 — Seller Sessions
+- [x] **Migrations** — `create_pos_sessions_table` (seller_id, opening_cash, current_cash, status, started_at, finished_at) + `add_pos_session_id_to_sales`
+- [x] **PosSession model** — fillable, casts, `belongsTo User`, `hasMany Sale`, `isActive()`, `canEnd()`
+- [x] **Sale model** — `pos_session_id` added to fillable, `belongsTo PosSession` relation
+- [x] **Login redirect** — `LoginController` checks for active session; resumes or redirects to `/pos/iniciar-turno`
+- [x] **Start-session page** — `/pos/iniciar-turno`: opening cash form, `posStartSession` Alpine factory, creates session via API then redirects to `/pos/venta`
+- [x] **Session API** — `POST /api/sessions` (storeSession), `GET /api/sessions/current`, `PATCH /api/sessions/current/withdraw`, `PATCH /api/sessions/current/end` (admin auth + current_cash == 0 guard)
+- [x] **storeSale updated** — requires active session (409 if none), attaches `pos_session_id`, increments `current_cash` for cash payments inside transaction
+- [x] **deleteSale updated** — decrements `current_cash` of linked session for cash sales inside transaction
+- [x] **Status page updated** — sources stats from session sales, cash summary (apertura / en caja / retirado), withdrawal calls `PATCH /withdraw`, end session calls `PATCH /end`
+
+### Phase 8 — Tests
 - [ ] **PosPageAccessTest** — Seller access OK, admin redirected, guest redirected to login
 - [ ] **PosProductSearchTest** — Search by name, barcode, active products only
 - [ ] **PosSaleCreationTest** — Valid sale, stock decrement, stock movements, insufficient stock handling, change calculation

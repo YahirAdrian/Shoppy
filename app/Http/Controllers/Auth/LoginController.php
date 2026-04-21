@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\PosSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,10 +40,18 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
-        return match (Auth::user()->role) {
-            'admin'  => redirect()->intended('/admin/dashboard'),
-            default  => redirect()->intended('/pos'),
-        };
+        if (Auth::user()->role === 'admin') {
+            return redirect()->intended('/admin/dashboard');
+        }
+
+        // Seller: resume active session or prompt to start a new one
+        $hasActive = PosSession::where('seller_id', Auth::id())
+            ->where('status', 'active')
+            ->exists();
+
+        return $hasActive
+            ? redirect()->intended('/pos/venta')
+            : redirect()->route('pos.session.start');
     }
 
     public function destroy(Request $request)

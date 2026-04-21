@@ -63,6 +63,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 Route::middleware(['auth', 'role:seller'])->prefix('pos')->name('pos.')->group(function () {
     Route::get('/', fn () => redirect()->route('pos.sale'))->name('index');
+    Route::get('/iniciar-turno', [PosController::class, 'startSession'])->name('session.start');
     Route::get('/venta', [PosController::class, 'sale'])->name('sale');
     Route::get('/buscar', [PosController::class, 'search'])->name('search');
     Route::get('/estado', [PosController::class, 'status'])->name('status');
@@ -73,4 +74,8 @@ Route::middleware(['auth', 'role:seller'])->prefix('pos')->name('pos.')->group(f
     Route::get('/api/sales/{sale}', [PosApiController::class, 'showSale'])->name('api.sales.show');
     Route::delete('/api/sales/{sale}', [PosApiController::class, 'deleteSale'])->name('api.sales.destroy');
     Route::post('/api/admin-auth', [PosApiController::class, 'adminAuth'])->name('api.admin-auth');
+    Route::post('/api/sessions', [PosApiController::class, 'storeSession'])->name('api.sessions.store');
+    Route::get('/api/sessions/current', [PosApiController::class, 'currentSession'])->name('api.sessions.current');
+    Route::patch('/api/sessions/current/withdraw', [PosApiController::class, 'withdraw'])->name('api.sessions.withdraw');
+    Route::patch('/api/sessions/current/end', [PosApiController::class, 'endSession'])->name('api.sessions.end');
 });

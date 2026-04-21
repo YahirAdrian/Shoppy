@@ -6,12 +6,16 @@
     </form>
 
     <div x-data="posStatus({
-            salesApiBase: '{{ route('pos.api.sales.store') }}',
-            adminAuthUrl: '{{ route('pos.api.admin-auth') }}',
-            logoutUrl: '{{ route('logout') }}',
-            currency: @js($currency),
-            totalSold: @js($totalSold),
-            sales: @js($salesData)
+            salesApiBase:   '{{ route('pos.api.sales.store') }}',
+            adminAuthUrl:   '{{ route('pos.api.admin-auth') }}',
+            withdrawUrl:    '{{ route('pos.api.sessions.withdraw') }}',
+            endSessionUrl:  '{{ route('pos.api.sessions.end') }}',
+            logoutUrl:      '{{ route('logout') }}',
+            currency:       @js($currency),
+            totalSold:      @js($totalSold),
+            currentCash:    @js($session ? (float)$session->current_cash : 0),
+            openingCash:    @js($session ? (float)$session->opening_cash : 0),
+            sales:          @js($salesData)
          })" x-init="init()" x-cloak>
 
         {{-- Page header --}}
@@ -124,67 +128,63 @@
 
             <div class="px-6 py-5" x-show="isAdminUnlocked">
 
+                {{-- Cash summary --}}
+                <div class="mb-5 grid grid-cols-3 gap-4 rounded-lg bg-stone-50 p-4 text-sm">
+                    <div>
+                        <p class="text-stone-500">Apertura</p>
+                        <p class="text-lg font-bold text-stone-700" x-text="money(openingCash)"></p>
+                    </div>
+                    <div>
+                        <p class="text-stone-500">En caja ahora</p>
+                        <p class="text-lg font-bold"
+                           :class="canEndSession() ? 'text-green-700' : 'text-stone-800'"
+                           x-text="money(currentCash)"></p>
+                    </div>
+                    <div>
+                        <p class="text-stone-500">Total retirado</p>
+                        <p class="text-lg font-bold text-stone-800"
+                           x-text="money(Math.max(0, openingCash + totalSold - currentCash))"></p>
+                    </div>
+                </div>
+
                 {{-- Money withdrawal --}}
                 <h3 class="mb-3 text-sm font-semibold text-stone-700">Retiro de dinero</h3>
 
-                <div class="mb-4 flex items-end gap-3">
+                <div class="mb-2 flex items-end gap-3">
                     <div>
                         <label class="mb-1 block text-xs text-stone-500">Monto a retirar</label>
                         <div class="flex items-center gap-1">
                             <span class="text-stone-500">{{ $currency }}</span>
                             <input type="number" step="0.01" min="0" x-model="withdrawalInput"
                                    @keydown.enter="addWithdrawal()"
-                                   class="w-36 rounded-lg border border-stone-300 px-3 py-2 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500">
+                                   :disabled="withdrawalLoading"
+                                   class="w-36 rounded-lg border border-stone-300 px-3 py-2 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 disabled:opacity-50">
                         </div>
                     </div>
-                    <button type="button" @click="addWithdrawal()"
-                            class="rounded-lg bg-stone-700 px-4 py-2 text-sm font-medium text-white hover:bg-stone-800">
-                        Registrar retiro
+                    <button type="button" @click="addWithdrawal()" :disabled="withdrawalLoading"
+                            class="rounded-lg bg-stone-700 px-4 py-2 text-sm font-medium text-white hover:bg-stone-800 disabled:opacity-50">
+                        <span x-show="!withdrawalLoading">Registrar retiro</span>
+                        <span x-show="withdrawalLoading">Registrando…</span>
                     </button>
                 </div>
 
                 <p x-show="withdrawalError" x-text="withdrawalError"
                    class="mb-3 text-sm text-red-600"></p>
 
-                <div class="mb-4 flex gap-8 text-sm">
-                    <div>
-                        <p class="text-stone-500">Total recaudado</p>
-                        <p class="text-lg font-bold text-stone-800" x-text="money(totalSold)"></p>
-                    </div>
-                    <div>
-                        <p class="text-stone-500">Total retirado</p>
-                        <p class="text-lg font-bold"
-                           :class="canEndSession() ? 'text-green-700' : 'text-stone-800'"
-                           x-text="money(totalWithdrawn)"></p>
-                    </div>
-                    <div>
-                        <p class="text-stone-500">Pendiente</p>
-                        <p class="text-lg font-bold text-red-600"
-                           x-text="money(Math.max(0, totalSold - totalWithdrawn))"></p>
-                    </div>
-                </div>
-
-                <div x-show="withdrawals.length > 0" class="mb-4">
-                    <p class="mb-1 text-xs text-stone-400">Retiros registrados</p>
-                    <div class="flex flex-wrap gap-2">
-                        <template x-for="(w, i) in withdrawals" :key="i">
-                            <span class="rounded bg-stone-100 px-2 py-0.5 text-xs text-stone-600"
-                                  x-text="money(w)"></span>
-                        </template>
-                    </div>
-                </div>
-
                 {{-- End session --}}
-                <div class="border-t border-stone-100 pt-4">
+                <div class="mt-5 border-t border-stone-100 pt-4">
+                    <p x-show="endSessionError" x-text="endSessionError"
+                       class="mb-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"></p>
                     <button type="button" @click="endSession()"
-                            :disabled="!canEndSession()"
+                            :disabled="!canEndSession() || endingSession"
                             class="rounded-lg px-5 py-2 text-sm font-semibold text-white transition-colors
                                    disabled:cursor-not-allowed disabled:bg-stone-300
                                    enabled:bg-red-600 enabled:hover:bg-red-700">
-                        Terminar sesión
+                        <span x-show="!endingSession">Terminar sesión</span>
+                        <span x-show="endingSession">Terminando…</span>
                     </button>
                     <p x-show="!canEndSession()" class="mt-1 text-xs text-stone-400">
-                        Retire todo el dinero para poder terminar la sesión
+                        Retire todo el efectivo (incluyendo la apertura) para terminar la sesión
                     </p>
                 </div>
             </div>

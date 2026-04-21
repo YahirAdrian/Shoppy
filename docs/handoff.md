@@ -65,7 +65,19 @@ Phases 1–9 are complete. Phase 4 (Inventory) was the last feature **browser QA
 
 ## Where We Are
 
-**Current phase:** Shoppy Sales — Phase 7 (Tests)
+**Current phase:** Shoppy Sales — Phase 8 (Tests)
+
+**Shoppy Sales — Phase 7 complete (Seller Sessions):**
+- Spec: `docs/specs/Shoppy_Sales/seller_sessions.md`
+- Migrations: `2026_04_21_000001_create_pos_sessions_table`, `2026_04_21_000002_add_pos_session_id_to_sales` — both run
+- `app/Models/PosSession.php` — new model; `app/Models/Sale.php` — added `pos_session_id` to fillable + `belongsTo PosSession`
+- `LoginController::store()` — after seller auth, checks for active `pos_session`; resumes (redirect `/pos/venta`) or starts new (redirect `/pos/iniciar-turno`)
+- `PosController::startSession()` — GET `/pos/iniciar-turno`; redirects to `/pos/venta` if session already active
+- `resources/js/pos/start-session.js` + `resources/views/pos/start-session.blade.php` — opening cash form
+- `PosApiController`: 4 new session endpoints (`storeSession`, `currentSession`, `withdraw`, `endSession`). `storeSale` now requires active session + attaches `pos_session_id` + increments `current_cash` for cash payments (inside transaction). `deleteSale` decrements `current_cash` of linked session.
+- Status page: passes `currentCash`/`openingCash` from session to Alpine; withdrawal calls `PATCH /api/sessions/current/withdraw` (updates `currentCash` live); end session calls `PATCH /api/sessions/current/end` (admin auth + `current_cash == 0` guard) then submits logout form.
+
+**Known follow-up:** SaleCreation tests need updating — `storeSale` now requires an active pos_session; test setUp must create one. Also add `SellerSessionTest` covering session create/resume/withdraw/end flows.
 
 **Shoppy Sales — Phase 6 complete (POS Status Page):**
 - `routes/web.php` — 3 new POS API routes: `GET /api/sales/{sale}` (showSale), `DELETE /api/sales/{sale}` (deleteSale), `POST /api/admin-auth` (adminAuth)

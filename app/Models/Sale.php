@@ -13,6 +13,7 @@ class Sale extends Model
 
     protected $fillable = [
         'user_id',
+        'pos_session_id',
         'customer_name',
         'subtotal',
         'discount_amount',
@@ -25,21 +26,26 @@ class Sale extends Model
     protected function casts(): array
     {
         return [
-            'subtotal' => 'decimal:2',
+            'subtotal'        => 'decimal:2',
             'discount_amount' => 'decimal:2',
             'amount_tendered' => 'decimal:2',
-            'change_given' => 'decimal:2',
+            'change_given'    => 'decimal:2',
         ];
     }
 
     public function getTotalAttribute(): float
     {
-        return $this->subtotal - $this->discount_amount;
+        return (float) $this->subtotal - (float) $this->discount_amount;
     }
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function posSession(): BelongsTo
+    {
+        return $this->belongsTo(PosSession::class, 'pos_session_id');
     }
 
     public function items(): HasMany

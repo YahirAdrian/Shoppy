@@ -5,10 +5,27 @@ namespace App\Http\Controllers\Pos;
 use App\Http\Controllers\Controller;
 use App\Models\BusinessSetting;
 use App\Models\Category;
+use App\Models\PosSession;
 use App\Models\Sale;
 
 class PosController extends Controller
 {
+    public function startSession()
+    {
+        // If already has an active session, skip the form
+        $active = PosSession::where('seller_id', auth()->id())
+            ->where('status', 'active')
+            ->first();
+
+        if ($active) {
+            return redirect()->route('pos.sale');
+        }
+
+        return view('pos.start-session', [
+            'currency' => BusinessSetting::first()?->currency_symbol ?? '$',
+        ]);
+    }
+
     public function sale()
     {
         $settings = BusinessSetting::first();
@@ -37,31 +54,35 @@ class PosController extends Controller
     public function status()
     {
         $settings = BusinessSetting::first();
-        $userId = auth()->id();
 
-        $sales = Sale::with('items')
-            ->where('user_id', $userId)
-            ->whereDate('created_at', today())
-            ->orderByDesc('created_at')
-            ->get();
+        $session = PosSession::where('seller_id', auth()->id())
+            ->where('status', 'active')
+            ->first();
 
-        $totalSold = $sales->sum(fn ($s) => (float) $s->subtotal - (float) $s->discount_amount);
+        $sales = $session
+            ? Sale::where('pos_session_id', $session->id)
+                ->orderByDesc('created_at')
+                ->get()
+            : collect();
+
+        $totalSold = $sales->sum(fn ($s) => (float) $s->total);
         $count = $sales->count();
 
         return view('pos.status', [
-            'currency' => $settings?->currency_symbol ?? '$',
-            'sellerName' => auth()->user()->name,
-            'totalSales' => $count,
-            'totalSold' => $totalSold,
-            'avgTicket' => $count > 0 ? $totalSold / $count : 0,
-            'salesData' => $sales->map(fn ($s) => [
-                'id' => $s->id,
-                'created_at' => $s->created_at->toIso8601String(),
-                'subtotal' => (float) $s->subtotal,
+            'currency'    => $settings?->currency_symbol ?? '$',
+            'sellerName'  => auth()->user()->name,
+            'session'     => $session,
+            'totalSales'  => $count,
+            'totalSold'   => $totalSold,
+            'avgTicket'   => $count > 0 ? $totalSold / $count : 0,
+            'salesData'   => $sales->map(fn ($s) => [
+                'id'              => $s->id,
+                'created_at'      => $s->created_at->toIso8601String(),
+                'subtotal'        => (float) $s->subtotal,
                 'discount_amount' => (float) $s->discount_amount,
-                'total' => (float) $s->total,
-                'payment_method' => $s->payment_method,
-                'note' => $s->note,
+                'total'           => (float) $s->total,
+                'payment_method'  => $s->payment_method,
+                'note'            => $s->note,
             ]),
         ]);
     }

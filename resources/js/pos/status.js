@@ -1,17 +1,25 @@
 export default function posStatus({
     salesApiBase,
     adminAuthUrl,
+    withdrawUrl,
+    endSessionUrl,
     logoutUrl,
     currency,
     totalSold,
+    currentCash: initialCurrentCash,
+    openingCash,
     sales: initialSales,
 }) {
     return {
         salesApiBase,
         adminAuthUrl,
+        withdrawUrl,
+        endSessionUrl,
         logoutUrl,
         currency,
         totalSold,
+        currentCash: initialCurrentCash,
+        openingCash,
 
         sales: initialSales,
 
@@ -39,9 +47,12 @@ export default function posStatus({
 
         // Money withdrawal
         withdrawalInput: '',
-        totalWithdrawn: 0,
-        withdrawals: [],
         withdrawalError: '',
+        withdrawalLoading: false,
+
+        // End session
+        endingSession: false,
+        endSessionError: '',
 
         init() {
             document.addEventListener('visibilitychange', () => {
@@ -178,24 +189,76 @@ export default function posStatus({
 
         // ── Money withdrawal ───────────────────────────────────────────
 
-        addWithdrawal() {
+        async addWithdrawal() {
             const amount = parseFloat(this.withdrawalInput);
             if (!amount || amount <= 0) {
                 this.withdrawalError = 'Ingrese un monto válido.';
                 return;
             }
             this.withdrawalError = '';
-            this.withdrawals.push(amount);
-            this.totalWithdrawn = this.withdrawals.reduce((s, a) => s + a, 0);
-            this.withdrawalInput = '';
+            this.withdrawalLoading = true;
+
+            const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+            try {
+                const res = await fetch(this.withdrawUrl, {
+                    method: 'PATCH',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrf,
+                    },
+                    body: JSON.stringify({ amount }),
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    this.currentCash = data.session.current_cash;
+                    this.withdrawalInput = '';
+                } else {
+                    this.withdrawalError = data.message || 'Error al registrar el retiro.';
+                }
+            } catch {
+                this.withdrawalError = 'Error de red. Intente de nuevo.';
+            } finally {
+                this.withdrawalLoading = false;
+            }
         },
 
         canEndSession() {
-            return this.totalWithdrawn >= this.totalSold;
+            return Math.round(this.currentCash * 100) === 0;
         },
 
-        endSession() {
-            document.getElementById('logout-form').submit();
+        async endSession() {
+            if (this.endingSession) return;
+            this.endingSession = true;
+            this.endSessionError = '';
+
+            const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+            try {
+                const res = await fetch(this.endSessionUrl, {
+                    method: 'PATCH',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrf,
+                        'X-Admin-Token': this.adminToken || '',
+                    },
+                });
+
+                if (res.ok) {
+                    document.getElementById('logout-form').submit();
+                } else {
+                    const data = await res.json();
+                    this.endSessionError = data.message || 'Error al terminar la sesión.';
+                    this.endingSession = false;
+                }
+            } catch {
+                this.endSessionError = 'Error de red. Intente de nuevo.';
+                this.endingSession = false;
+            }
         },
 
         // ── Helpers ────────────────────────────────────────────────────
