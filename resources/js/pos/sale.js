@@ -21,6 +21,7 @@ export default function posSale({ searchUrl, storeUrl, currency = '$', business 
         submitting: false,
         submitError: '',
         lastSale: null,
+        addedToast: false,
 
         init() {
             try {
@@ -28,6 +29,12 @@ export default function posSale({ searchUrl, storeUrl, currency = '$', business 
                 if (stored) this.cart = JSON.parse(stored);
             } catch (e) {
                 this.cart = [];
+            }
+            const params = new URLSearchParams(window.location.search);
+            if (params.get('added') === '1') {
+                this.addedToast = true;
+                window.history.replaceState({}, '', window.location.pathname);
+                setTimeout(() => { this.addedToast = false; }, 3000);
             }
         },
 

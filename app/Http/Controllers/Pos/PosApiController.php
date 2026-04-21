@@ -17,8 +17,11 @@ class PosApiController extends Controller
     {
         $query = trim((string) $request->query('q', ''));
         $categoryId = $request->query('category_id');
+        $page = $request->query('page');
 
-        $products = Product::query()
+        $lowStockDefault = \App\Models\BusinessSetting::value('low_stock') ?? 5;
+
+        $builder = Product::query()
             ->with('category:id,name')
             ->where('is_active', true)
             ->when($query !== '', function ($q) use ($query) {
@@ -28,20 +31,35 @@ class PosApiController extends Controller
                 });
             })
             ->when($categoryId, fn ($q) => $q->where('category_id', $categoryId))
-            ->orderBy('name')
-            ->limit(20)
-            ->get()
-            ->map(fn (Product $p) => [
-                'id' => $p->id,
-                'name' => $p->name,
-                'barcode' => $p->barcode,
-                'selling_price' => (float) $p->selling_price,
-                'stock' => (float) $p->stock,
-                'unit' => $p->unit,
-                'category' => $p->category?->name,
-                'category_id' => $p->category_id,
-                'image' => $p->image ? asset('storage/' . $p->image) : null,
+            ->orderBy('name');
+
+        $mapProduct = fn (Product $p) => [
+            'id' => $p->id,
+            'name' => $p->name,
+            'barcode' => $p->barcode,
+            'selling_price' => (float) $p->selling_price,
+            'stock' => (float) $p->stock,
+            'unit' => $p->unit,
+            'category' => $p->category?->name,
+            'category_id' => $p->category_id,
+            'image' => $p->image ? asset('storage/' . $p->image) : null,
+            'low_stock_threshold' => (float) ($p->low_stock_alert ?? $lowStockDefault),
+        ];
+
+        if ($page !== null) {
+            $paginated = $builder->paginate(30);
+
+            return response()->json([
+                'products' => $paginated->getCollection()->map($mapProduct)->values(),
+                'meta' => [
+                    'current_page' => $paginated->currentPage(),
+                    'last_page' => $paginated->lastPage(),
+                    'total' => $paginated->total(),
+                ],
             ]);
+        }
+
+        $products = $builder->limit(20)->get()->map($mapProduct);
 
         return response()->json(['products' => $products]);
     }

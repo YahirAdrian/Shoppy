@@ -6,6 +6,21 @@
             business: @js($business)
          })" x-init="init()" x-cloak>
 
+        {{-- Added-from-search toast --}}
+        <div x-show="addedToast"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 -translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="mb-4 flex items-center gap-2 rounded-lg bg-green-50 border border-green-200 px-4 py-3 text-sm text-green-700">
+            <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            Producto agregado al carrito
+        </div>
+
         {{-- Page header --}}
         <div class="mb-6 flex items-center justify-between">
             <div>

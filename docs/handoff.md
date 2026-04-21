@@ -65,7 +65,14 @@ Phases 1–9 are complete. Phase 4 (Inventory) was the last feature **browser QA
 
 ## Where We Are
 
-**Current phase:** Shoppy Sales — Phase 5 (Product Search Page)
+**Current phase:** Shoppy Sales — Phase 6 (POS Status Page)
+
+**Shoppy Sales — Phase 5 complete (Product Search Page):**
+- `PosApiController::searchProducts()` — When `?page=` is present returns paginated (30/page) JSON with `meta` (current_page, last_page, total); without `?page=` keeps limit(20) for sale page quick search. Also returns `low_stock_threshold` per product (product's own `low_stock_alert` or global business setting fallback).
+- `resources/js/pos/search.js` — New `posSearch` Alpine factory: debounced search (600ms), category pill filtering, paginated product loading, `addToSale()` writes to `pos_cart` localStorage and redirects to `/pos/venta?added=1`.
+- `resources/views/pos/search.blade.php` — Full UI: search bar, horizontal scrollable category pills, responsive product grid (2→5 cols), stock badges (amber=low, red=zero), Agregar/Sin stock button per card, prev/next pagination.
+- `resources/js/pos/sale.js` — Added `addedToast` state; `init()` now detects `?added=1` query param, shows a 3-second green toast, then clears the URL.
+- `resources/views/pos/sale.blade.php` — Added toast banner wired to `addedToast`.
 
 **Shoppy Sales — Phase 4 complete (Receipt Printing):**
 - `app/Http/Controllers/Pos/PosController.php::sale()` now passes a `business` array (name, address, phone, email, receipt_header, receipt_footer) and `currency` to `pos/sale.blade.php`

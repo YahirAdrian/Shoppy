@@ -33,9 +33,9 @@
 ---
 
 ### Phase 5 — Product Search Page
-- [ ] **Search page UI** — Search bar + product/category toggle, category pills (horizontal scroll), product grid (30/page) with cards showing image, name, price, stock warnings (yellow low, red zero), "Agregar producto" button
-- [ ] **Enhanced search endpoint** — Add `?category_id=` and `?page=` params to `searchProducts()`
-- [ ] **Add to sale flow** — Save product to localStorage, redirect to `/pos/venta?added=1` with success alert
+- [x] **Search page UI** — Search bar + product/category toggle, category pills (horizontal scroll), product grid (30/page) with cards showing image, name, price, stock warnings (yellow low, red zero), "Agregar producto" button
+- [x] **Enhanced search endpoint** — Add `?category_id=` and `?page=` params to `searchProducts()`
+- [x] **Add to sale flow** — Save product to localStorage, redirect to `/pos/venta?added=1` with success alert
 
 ---
 
