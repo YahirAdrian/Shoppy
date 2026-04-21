@@ -22,8 +22,8 @@
 ---
 
 ### Phase 3 — Sale Creation Backend
-- [ ] **Store sale endpoint** — `PosApiController::storeSale()` wrapped in `DB::transaction`: validate items/payment, create Sale + SaleItems (snapshot product_name, unit_price), decrement Product.stock, create StockMovement records (action='sale'), return created sale as JSON
-- [ ] **Stock validation** — If insufficient stock and `force_low_stock` is false, return 422 with problematic products list
+- [x] **Store sale endpoint** — `PosApiController::storeSale()` wrapped in `DB::transaction`: validate items/payment, create Sale + SaleItems (snapshot product_name, unit_price), decrement Product.stock, create StockMovement records (action='sale'), return created sale as JSON
+- [x] **Stock validation** — If insufficient stock and `force_low_stock` is false, return 422 with problematic products list
 
 ---
 

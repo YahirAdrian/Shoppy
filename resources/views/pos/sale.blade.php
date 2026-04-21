@@ -1,5 +1,8 @@
 <x-layouts.pos title="Venta - Shoppy Sales">
-    <div x-data="posSale('{{ route('pos.api.products') }}')" x-init="init()" x-cloak>
+    <div x-data="posSale({
+            searchUrl: '{{ route('pos.api.products') }}',
+            storeUrl: '{{ route('pos.api.sales.store') }}'
+         })" x-init="init()" x-cloak>
 
         {{-- Page header --}}
         <div class="mb-6 flex items-center justify-between">

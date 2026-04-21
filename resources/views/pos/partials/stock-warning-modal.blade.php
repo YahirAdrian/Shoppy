@@ -25,15 +25,15 @@
         {{-- Body --}}
         <div class="space-y-3 px-6 py-5">
             <p class="text-sm text-stone-700">
-                Los siguientes productos no tienen stock suficiente. ¿Desea continuar de todas formas?
+                Los siguientes productos no tienen stock suficiente. ¿Desea registrar la venta de todas formas?
             </p>
             <ul class="divide-y divide-stone-200 rounded-lg border border-stone-200">
-                <template x-for="item in stockIssues" :key="item.id">
+                <template x-for="item in stockIssues" :key="item.product_id">
                     <li class="flex items-center justify-between px-3 py-2 text-sm">
                         <span class="font-medium text-stone-800" x-text="item.name"></span>
                         <span class="text-xs text-stone-500">
-                            Pedido: <span class="font-semibold text-red-600" x-text="item.quantity"></span>
-                            · Disponible: <span x-text="item.stock"></span>
+                            Pedido: <span class="font-semibold text-red-600" x-text="item.requested"></span>
+                            · Disponible: <span x-text="item.available"></span>
                         </span>
                     </li>
                 </template>
@@ -46,9 +46,11 @@
                     class="rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 hover:bg-stone-50">
                 Cancelar
             </button>
-            <button type="button" @click="proceedDespiteStock()"
-                    class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-red-700">
-                Continuar de todas formas
+            <button type="button" @click="forceSubmit()"
+                    :disabled="submitting"
+                    class="rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50">
+                <span x-show="!submitting">Forzar registro</span>
+                <span x-show="submitting">Registrando…</span>
             </button>
         </div>
     </div>

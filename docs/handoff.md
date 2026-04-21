@@ -65,20 +65,26 @@ Phases 1–9 are complete. Phase 4 (Inventory) was the last feature **browser QA
 
 ## Where We Are
 
-**Current phase:** Shoppy Sales — Phase 3 (Sale Creation Backend)
+**Current phase:** Shoppy Sales — Phase 4 (Receipt Printing)
 
-**Shoppy Sales — Phase 2 complete (Sale Page UI):**
-- `app/Http/Controllers/Pos/PosApiController.php` — `searchProducts()` returns active products filtered by barcode (exact) or name (LIKE), limit 20, JSON shape `{products: [{id, name, barcode, selling_price, stock, unit, category, category_id, image}]}`
-- `resources/views/pos/sale.blade.php` — full Alpine.js page: search bar (0.8s debounce, auto-add single result, scrollable cards for multiple), cart table with editable quantity/discount, live totals, localStorage persistence under key `pos_cart`, reset + confirm buttons
-- `resources/views/pos/partials/payment-modal.blade.php` — method selector (cash only active), tendered input, live change calc, collapsible optional fields (customer, note)
-- `resources/views/pos/partials/stock-warning-modal.blade.php` — red-styled modal showing insufficient-stock items, "continue anyway" flow
-- `submitSale()` intentionally stubbed (alert) — Phase 3 wires it to `POST /pos/api/sales`
+**Shoppy Sales — Phase 3 complete (Sale Creation Backend):**
+- `app/Http/Controllers/Pos/PosApiController.php::storeSale()` — `DB::transaction` with `lockForUpdate()` on products, server-side price recompute (client prices ignored), creates Sale/SaleItem/StockMovement rows, returns 201 with full sale payload
+- Stock validation — returns **422** with `stock_issues: [{product_id, name, requested, available}]` when insufficient stock and `force_low_stock=false`
+- Client-side (`resources/js/pos/sale.js`) — `submitSale(force)` posts to `/pos/api/sales` with CSRF, handles 201/422/network errors; 422+stock_issues reopens the warning modal with a "Forzar registro" button that calls `forceSubmit()` → `submitSale(true)`
+- Stock modal now fires post-submit (server-authoritative), not pre-flight; payment modal shows `submitError` toast + "Registrando…" disabled state
+
+**Phase 2 (Sale Page UI) — previously shipped:**
+- Search bar, cart table (extracted to `pos/partials/cart-table.blade.php`), localStorage persistence under `pos_cart`, payment modal, stock warning modal
+- Alpine factory lives in `resources/js/pos/sale.js`, exposed via `window.posSale` in `app.js`
+- `searchProducts()` returns active products filtered by barcode (exact) or name (LIKE), limit 20
 
 **Immediate next tasks:**
-1. Phase 3 — Sale creation backend (`storeSale()` with DB::transaction, stock decrement, StockMovement rows)
-2. Phase 4 — Receipt printing
-3. Phases 5–7 — Search page, status page, tests
-4. Adminer Phase 10 — Polish & QA
+1. Phase 4 — Receipt printing (build HTML receipt from `data.sale`, open `window.print()`)
+2. Phases 5–7 — Search page, status page, tests
+3. Adminer Phase 10 — Polish & QA
+
+**Known follow-up:**
+- `stock_movements.quantity` is `integer` but `products.stock` is `decimal(10,2)` — fractional sales truncate in audit log. `storeSale()` rounds for the audit record. Admin `adjustStock` has the same issue. Migrate to decimal when convenient.
 
 ---
 

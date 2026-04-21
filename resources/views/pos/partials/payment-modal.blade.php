@@ -80,6 +80,10 @@
                 <span x-show="showOptional">− Ocultar campos opcionales</span>
             </button>
 
+            {{-- Submit error --}}
+            <p x-show="submitError" x-text="submitError"
+               class="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700"></p>
+
             {{-- Optional: customer + note --}}
             <div x-show="showOptional" class="space-y-3">
                 <div>
@@ -104,7 +108,8 @@
             <button type="button" @click="submitSale()"
                     class="rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
                     :disabled="!canSubmit()">
-                Registrar venta
+                <span x-show="!submitting">Registrar venta</span>
+                <span x-show="submitting">Registrando…</span>
             </button>
         </div>
     </div>

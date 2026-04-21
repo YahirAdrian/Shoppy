@@ -1,6 +1,7 @@
-export default function posSale(searchUrl) {
+export default function posSale({ searchUrl, storeUrl }) {
     return {
         searchUrl,
+        storeUrl,
 
         query: '',
         searchTimer: null,
@@ -15,6 +16,9 @@ export default function posSale(searchUrl) {
 
         showStockWarning: false,
         stockIssues: [],
+        submitting: false,
+        submitError: '',
+        lastSale: null,
 
         init() {
             try {
@@ -99,6 +103,7 @@ export default function posSale(searchUrl) {
             this.query = '';
             this.searchResults = [];
             this.searchMessage = '';
+            this.payment = { method: 'cash', tendered: '', customer_name: '', note: '' };
             localStorage.removeItem('pos_cart');
         },
 
@@ -126,34 +131,84 @@ export default function posSale(searchUrl) {
             return Math.max(0, tendered - this.total());
         },
 
-        checkStock() {
-            return this.cart.filter(i => parseFloat(i.quantity) > parseFloat(i.stock));
-        },
-
         openPayment() {
             if (this.cart.length === 0) return;
-            const issues = this.checkStock();
-            if (issues.length > 0) {
-                this.stockIssues = issues;
-                this.showStockWarning = true;
-                return;
-            }
-            this.showPaymentModal = true;
-        },
-
-        proceedDespiteStock() {
-            this.showStockWarning = false;
+            this.submitError = '';
             this.showPaymentModal = true;
         },
 
         canSubmit() {
             const tendered = parseFloat(this.payment.tendered) || 0;
-            return this.payment.method === 'cash' && tendered >= this.total() && this.total() > 0;
+            return !this.submitting
+                && this.payment.method === 'cash'
+                && tendered >= this.total()
+                && this.total() > 0;
         },
 
-        submitSale() {
-            // Backend submission implemented in Phase 3
-            alert('Registro de venta pendiente de implementación (Fase 3).');
+        async submitSale(force = false) {
+            if (this.submitting) return;
+            this.submitting = true;
+            this.submitError = '';
+
+            const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+
+            const payload = {
+                items: this.cart.map(i => ({
+                    product_id: i.id,
+                    quantity: parseFloat(i.quantity),
+                    discount: parseFloat(i.discount) || 0,
+                })),
+                payment_method: this.payment.method,
+                amount_tendered: parseFloat(this.payment.tendered) || 0,
+                customer_name: this.payment.customer_name || null,
+                note: this.payment.note || null,
+                force_low_stock: force,
+            };
+
+            try {
+                const res = await fetch(this.storeUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrf,
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (res.status === 201) {
+                    const data = await res.json();
+                    this.lastSale = data.sale;
+                    this.showPaymentModal = false;
+                    this.resetSale();
+                    // Phase 4 will replace this with printReceipt()
+                    alert(`Venta #${data.sale.id} registrada por ${data.sale.total.toFixed(2)}.`);
+                    return;
+                }
+
+                if (res.status === 422) {
+                    const data = await res.json();
+                    if (Array.isArray(data.stock_issues) && data.stock_issues.length > 0) {
+                        this.stockIssues = data.stock_issues;
+                        this.showPaymentModal = false;
+                        this.showStockWarning = true;
+                        return;
+                    }
+                    this.submitError = data.message || 'Datos inválidos.';
+                    return;
+                }
+
+                this.submitError = 'Error al registrar la venta. Intente de nuevo.';
+            } catch (e) {
+                this.submitError = 'Error de red. Intente de nuevo.';
+            } finally {
+                this.submitting = false;
+            }
+        },
+
+        forceSubmit() {
+            this.showStockWarning = false;
+            this.submitSale(true);
         },
     };
 }
