@@ -10,8 +10,18 @@ class PosController extends Controller
 {
     public function sale()
     {
+        $settings = BusinessSetting::first();
+
         return view('pos.sale', [
-            'currency' => BusinessSetting::first()?->currency_symbol ?? '$',
+            'currency' => $settings?->currency_symbol ?? '$',
+            'business' => [
+                'name' => $settings?->business_name ?? 'Shoppy',
+                'address' => $settings?->address,
+                'phone' => $settings?->phone,
+                'email' => $settings?->email,
+                'receipt_header' => $settings?->receipt_header,
+                'receipt_footer' => $settings?->receipt_footer,
+            ],
         ]);
     }
 

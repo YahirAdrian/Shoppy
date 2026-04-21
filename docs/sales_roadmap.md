@@ -28,7 +28,7 @@
 ---
 
 ### Phase 4 — Receipt Printing
-- [ ] **Client-side receipt** — After successful sale POST, build receipt HTML (business name, date, sale #, items table, totals, receipt footer from business_settings), open in new window with `window.print()`
+- [x] **Client-side receipt** — After successful sale POST, build receipt HTML (business name, date, sale #, items table, totals, receipt footer from business_settings), open in new window with `window.print()`
 
 ---
 

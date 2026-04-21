@@ -65,7 +65,12 @@ Phases 1–9 are complete. Phase 4 (Inventory) was the last feature **browser QA
 
 ## Where We Are
 
-**Current phase:** Shoppy Sales — Phase 4 (Receipt Printing)
+**Current phase:** Shoppy Sales — Phase 5 (Product Search Page)
+
+**Shoppy Sales — Phase 4 complete (Receipt Printing):**
+- `app/Http/Controllers/Pos/PosController.php::sale()` now passes a `business` array (name, address, phone, email, receipt_header, receipt_footer) and `currency` to `pos/sale.blade.php`
+- `resources/views/pos/sale.blade.php` forwards both into the Alpine factory via `@js($currency)` / `@js($business)`
+- `resources/js/pos/sale.js` — replaced the post-sale `alert()` with `printReceipt(sale)` + `buildReceiptHtml(sale)`. Opens a 380×640 popup, writes an escaped 80mm-ticket HTML document (business header, sale meta, items table, totals, tendered, change, receipt_header/footer), auto-fires `window.print()` on load and `window.close()` on `afterprint`. Popup-blocker fallback shows `submitError`.
 
 **Shoppy Sales — Phase 3 complete (Sale Creation Backend):**
 - `app/Http/Controllers/Pos/PosApiController.php::storeSale()` — `DB::transaction` with `lockForUpdate()` on products, server-side price recompute (client prices ignored), creates Sale/SaleItem/StockMovement rows, returns 201 with full sale payload
@@ -79,9 +84,8 @@ Phases 1–9 are complete. Phase 4 (Inventory) was the last feature **browser QA
 - `searchProducts()` returns active products filtered by barcode (exact) or name (LIKE), limit 20
 
 **Immediate next tasks:**
-1. Phase 4 — Receipt printing (build HTML receipt from `data.sale`, open `window.print()`)
-2. Phases 5–7 — Search page, status page, tests
-3. Adminer Phase 10 — Polish & QA
+1. Phases 5–7 — Search page, status page, tests
+2. Adminer Phase 10 — Polish & QA
 
 **Known follow-up:**
 - `stock_movements.quantity` is `integer` but `products.stock` is `decimal(10,2)` — fractional sales truncate in audit log. `storeSale()` rounds for the audit record. Admin `adjustStock` has the same issue. Migrate to decimal when convenient.

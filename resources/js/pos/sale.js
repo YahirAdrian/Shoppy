@@ -1,7 +1,9 @@
-export default function posSale({ searchUrl, storeUrl }) {
+export default function posSale({ searchUrl, storeUrl, currency = '$', business = {} }) {
     return {
         searchUrl,
         storeUrl,
+        currency,
+        business,
 
         query: '',
         searchTimer: null,
@@ -181,8 +183,7 @@ export default function posSale({ searchUrl, storeUrl }) {
                     this.lastSale = data.sale;
                     this.showPaymentModal = false;
                     this.resetSale();
-                    // Phase 4 will replace this with printReceipt()
-                    alert(`Venta #${data.sale.id} registrada por ${data.sale.total.toFixed(2)}.`);
+                    this.printReceipt(data.sale);
                     return;
                 }
 
@@ -209,6 +210,146 @@ export default function posSale({ searchUrl, storeUrl }) {
         forceSubmit() {
             this.showStockWarning = false;
             this.submitSale(true);
+        },
+
+        printReceipt(sale) {
+            const html = this.buildReceiptHtml(sale);
+            const win = window.open('', '_blank', 'width=380,height=640');
+            if (!win) {
+                this.submitError = 'No se pudo abrir la ventana de impresión. Revise el bloqueador de ventanas emergentes.';
+                return;
+            }
+            win.document.open();
+            win.document.write(html);
+            win.document.close();
+        },
+
+        buildReceiptHtml(sale) {
+            const esc = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+            })[c]);
+            const money = (n) => `${this.currency}${Number(n).toFixed(2)}`;
+            const date = new Date(sale.created_at);
+            const dateStr = date.toLocaleString('es-MX', {
+                year: 'numeric', month: '2-digit', day: '2-digit',
+                hour: '2-digit', minute: '2-digit',
+            });
+
+            const methodLabels = { cash: 'Efectivo', card: 'Tarjeta', other: 'Otro' };
+            const methodLabel = methodLabels[sale.payment_method] || sale.payment_method;
+
+            const itemsRows = sale.items.map((i) => `
+                <tr>
+                    <td class="name">${esc(i.product_name)}</td>
+                    <td class="qty">${Number(i.quantity)}</td>
+                    <td class="num">${money(i.unit_price)}</td>
+                    <td class="num">${money(i.subtotal)}</td>
+                </tr>
+            `).join('');
+
+            const optionalBlock = `
+                ${sale.customer_name ? `<p class="meta">Cliente: ${esc(sale.customer_name)}</p>` : ''}
+                ${sale.note ? `<p class="meta">Nota: ${esc(sale.note)}</p>` : ''}
+            `;
+
+            const headerText = this.business.receipt_header
+                ? `<p class="hdr-text">${esc(this.business.receipt_header)}</p>` : '';
+            const footerText = this.business.receipt_footer
+                ? `<p class="ftr-text">${esc(this.business.receipt_footer)}</p>` : '';
+            const address = this.business.address
+                ? `<p class="biz-contact">${esc(this.business.address)}</p>` : '';
+            const phone = this.business.phone
+                ? `<p class="biz-contact">Tel: ${esc(this.business.phone)}</p>` : '';
+
+            return `<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Ticket #${sale.id}</title>
+<style>
+  @page { size: 80mm auto; margin: 4mm; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Courier New', monospace; font-size: 12px; color: #000; margin: 0; padding: 8px; }
+  .center { text-align: center; }
+  .biz-name { font-size: 16px; font-weight: bold; margin: 0 0 4px; }
+  .biz-contact { margin: 0; font-size: 11px; }
+  .hdr-text, .ftr-text { margin: 6px 0; font-size: 11px; white-space: pre-line; }
+  .divider { border: 0; border-top: 1px dashed #000; margin: 8px 0; }
+  .meta { margin: 2px 0; font-size: 11px; }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  th, td { padding: 2px 0; vertical-align: top; }
+  th { border-bottom: 1px solid #000; text-align: left; }
+  .num { text-align: right; white-space: nowrap; }
+  .qty { text-align: center; width: 30px; }
+  .name { word-break: break-word; }
+  .totals { width: 100%; font-size: 12px; }
+  .totals td { padding: 2px 0; }
+  .totals .label { text-align: left; }
+  .totals .val { text-align: right; white-space: nowrap; }
+  .total-row td { font-weight: bold; font-size: 14px; border-top: 1px solid #000; padding-top: 4px; }
+  .thanks { text-align: center; margin-top: 10px; font-size: 11px; }
+  @media print { body { padding: 0; } }
+</style>
+</head>
+<body>
+  <div class="center">
+    <p class="biz-name">${esc(this.business.name || 'Shoppy')}</p>
+    ${address}
+    ${phone}
+    ${headerText}
+  </div>
+
+  <hr class="divider">
+
+  <p class="meta">Ticket: #${sale.id}</p>
+  <p class="meta">Fecha: ${esc(dateStr)}</p>
+  <p class="meta">Pago: ${esc(methodLabel)}</p>
+  ${optionalBlock}
+
+  <hr class="divider">
+
+  <table>
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th class="qty">Cant</th>
+        <th class="num">P.U.</th>
+        <th class="num">Subt.</th>
+      </tr>
+    </thead>
+    <tbody>${itemsRows}</tbody>
+  </table>
+
+  <hr class="divider">
+
+  <table class="totals">
+    <tr><td class="label">Subtotal</td><td class="val">${money(sale.subtotal)}</td></tr>
+    ${Number(sale.discount_amount) > 0
+              ? `<tr><td class="label">Descuento</td><td class="val">-${money(sale.discount_amount)}</td></tr>`
+              : ''}
+    <tr class="total-row"><td class="label">Total</td><td class="val">${money(sale.total)}</td></tr>
+    <tr><td class="label">Recibido</td><td class="val">${money(sale.amount_tendered)}</td></tr>
+    <tr><td class="label">Cambio</td><td class="val">${money(sale.change_given)}</td></tr>
+  </table>
+
+  <hr class="divider">
+
+  <div class="center">
+    ${footerText}
+    <p class="thanks">¡Gracias por su compra!</p>
+  </div>
+
+  <script>
+    window.addEventListener('load', function () {
+      window.focus();
+      window.print();
+    });
+    window.addEventListener('afterprint', function () {
+      window.close();
+    });
+  <\/script>
+</body>
+</html>`;
         },
     };
 }

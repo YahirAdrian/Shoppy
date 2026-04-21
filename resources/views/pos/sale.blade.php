@@ -1,7 +1,9 @@
 <x-layouts.pos title="Venta - Shoppy Sales">
     <div x-data="posSale({
             searchUrl: '{{ route('pos.api.products') }}',
-            storeUrl: '{{ route('pos.api.sales.store') }}'
+            storeUrl: '{{ route('pos.api.sales.store') }}',
+            currency: @js($currency),
+            business: @js($business)
          })" x-init="init()" x-cloak>
 
         {{-- Page header --}}
