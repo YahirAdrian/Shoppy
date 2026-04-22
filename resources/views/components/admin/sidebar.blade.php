@@ -3,11 +3,19 @@
        :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
     {{-- Logo --}}
+    @php
+        $businessLogo = \App\Models\BusinessSetting::value('logo');
+        $businessName = \App\Models\BusinessSetting::value('business_name') ?? 'Shoppy Adminer';
+    @endphp
     <div class="flex flex-col items-center gap-3 px-6 py-8">
-        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-primary-700">
-            <img src="{{ asset('shoppy-logo-white.svg') }}" alt="Shoppy" class="h-10 w-10">
+        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-primary-700 overflow-hidden">
+            @if ($businessLogo)
+                <img src="{{ asset('storage/' . $businessLogo) }}" alt="{{ $businessName }}" class="h-full w-full object-cover">
+            @else
+                <img src="{{ asset('shoppy-logo-white.svg') }}" alt="Shoppy" class="h-10 w-10">
+            @endif
         </div>
-        <span class="text-lg font-semibold text-white">Shoppy Adminer</span>
+        <span class="text-lg font-semibold text-white">{{ $businessName }}</span>
     </div>
 
     {{-- Navigation --}}
