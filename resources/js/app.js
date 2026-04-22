@@ -7,6 +7,7 @@ import posSearch from './pos/search';
 import posStatus from './pos/status';
 import posStartSession from './pos/start-session';
 import initDashboardCharts from './admin/dashboard';
+import guestCredentials from './guest-credentials';
 
 window.Alpine = Alpine;
 window.Chart = Chart;
@@ -15,5 +16,6 @@ window.posSearch = posSearch;
 window.posStatus = posStatus;
 window.posStartSession = posStartSession;
 window.initDashboardCharts = initDashboardCharts;
+window.guestCredentials = guestCredentials;
 
 Alpine.start();
