@@ -2,7 +2,9 @@
 
 ## Current State
 
-Phases 1–9 are complete. Phase 4 (Inventory) was the last feature **browser QA'd**.
+Shoppy Sales Phases 1–8 complete. Adminer Phases 1–9 complete. Error pages added.
+
+**Current phase:** Shoppy Adminer Phase 10 — Polish & QA (next up)
 
 **What's working (Phases 1–3):**
 - Fresh Laravel 11 install with `.env` configured for MySQL (via XAMPP)
@@ -112,8 +114,7 @@ Phases 1–9 are complete. Phase 4 (Inventory) was the last feature **browser QA
 - `searchProducts()` returns active products filtered by barcode (exact) or name (LIKE), limit 20
 
 **Immediate next tasks:**
-1. Phases 5–7 — Search page, status page, tests
-2. Adminer Phase 10 — Polish & QA
+1. Adminer Phase 10 — Polish & QA
 
 **Known follow-up:**
 - `stock_movements.quantity` is `integer` but `products.stock` is `decimal(10,2)` — fractional sales truncate in audit log. `storeSale()` rounds for the audit record. Admin `adjustStock` has the same issue. Migrate to decimal when convenient.

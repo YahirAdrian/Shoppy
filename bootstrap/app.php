@@ -22,5 +22,32 @@ return Application::configure(basePath: dirname(__DIR__))
         });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $isConnectionError = function (\Throwable $e): bool {
+            $msg = $e->getMessage();
+            foreach (['2002', 'Connection refused', 'php_network_getaddresses', 'Access denied for user', 'SQLSTATE'] as $needle) {
+                if (str_contains($msg, $needle)) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        $connectionResponse = function (\Illuminate\Http\Request $request) {
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'No se pudo conectar a la base de datos.'], 503);
+            }
+            return response()->view('errors.db-connection', [], 503);
+        };
+
+        $exceptions->render(function (\Illuminate\Database\QueryException $e, \Illuminate\Http\Request $request) use ($isConnectionError, $connectionResponse) {
+            if ($isConnectionError($e) || ($e->getPrevious() && $isConnectionError($e->getPrevious()))) {
+                return $connectionResponse($request);
+            }
+        });
+
+        $exceptions->render(function (\PDOException $e, \Illuminate\Http\Request $request) use ($isConnectionError, $connectionResponse) {
+            if ($isConnectionError($e)) {
+                return $connectionResponse($request);
+            }
+        });
     })->create();
