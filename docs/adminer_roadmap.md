@@ -66,9 +66,9 @@
 ---
 
 ### Phase 10 — Polish & QA
-- [ ] **Form validation** — Server-side validation with user-friendly error messages on all forms
-- [ ] **Flash messages** — Success/error feedback after every action
-- [ ] **Low stock alerts** — Visual warning on dashboard and product list for low stock items
-- [ ] **Empty states** — Friendly UI for empty tables and no-results scenarios
-- [ ] **Responsive check** — Verify admin UI on tablet, POS UI on tablet/touch screen
-- [ ] **Final QA pass** — Walk through every route and feature end-to-end
+- [x] **Form validation** — Server-side validation with user-friendly error messages on all forms
+- [x] **Flash messages** — Success/error feedback after every action
+- [x] **Low stock alerts** — Visual warning on dashboard and product list for low stock items
+- [x] **Empty states** — Friendly UI for empty tables and no-results scenarios
+- [x] **Responsive check** — Verify admin UI on tablet, POS UI on tablet/touch screen
+- [x] **Final QA pass** — Walk through every route and feature end-to-end

@@ -97,13 +97,13 @@ class PosPageAccessTest extends TestCase
         $response->assertSee('/pos/estado', false);
     }
 
-    public function test_seller_login_redirects_to_pos(): void
+    public function test_seller_login_without_session_redirects_to_start_session(): void
     {
         $this->seller();
 
         $this->post('/login', [
             'email' => 'seller@test.local',
             'password' => 'password',
-        ])->assertRedirect('/pos');
+        ])->assertRedirect('/pos/iniciar-turno');
     }
 }

@@ -60,7 +60,8 @@
 - [x] **Status page updated** — sources stats from session sales, cash summary (apertura / en caja / retirado), withdrawal calls `PATCH /withdraw`, end session calls `PATCH /end`
 
 ### Phase 8 — Tests
-- [ ] **PosPageAccessTest** — Seller access OK, admin redirected, guest redirected to login
-- [ ] **PosProductSearchTest** — Search by name, barcode, active products only
-- [ ] **PosSaleCreationTest** — Valid sale, stock decrement, stock movements, insufficient stock handling, change calculation
-- [ ] **PosStatusTest** — Stats accuracy, admin auth validation, sale deletion with stock restore
+- [x] **PosPageAccessTest** — Seller access OK, admin redirected, guest redirected to login
+- [x] **PosProductSearchTest** — Search by name, barcode, active products only, category filter, pagination, low stock thresholds
+- [x] **PosSaleCreationTest** — Valid sale, stock decrement, stock movements, insufficient stock, force oversell, session requirement, cash drawer increment
+- [x] **PosStatusTest** — Stats accuracy, admin auth validation, sale deletion with stock restore, session cash decrement, authorization
+- [x] **SellerSessionTest** — Session create/resume/withdraw/end flows, login redirects, admin token expiry
